@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clanes Derrotados - VX VORTEX 666</title>
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+body{
+background:#050505;
+color:white;
+text-align:center;
+min-height:100vh;
+}
+body::before{
+content:"";
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:900px;
+height:900px;
+background:radial-gradient(
+circle,
+rgba(255,80,0,.18) 0%,
+rgba(255,80,0,.08) 30%,
+rgba(255,80,0,.03) 55%,
+transparent 75%
+);
+z-index:-1;
+}
+h1{
+margin-top:40px;
+font-size:60px;
+color:#ff7a00;
+text-shadow:0 0 15px #ff6a00;
+}
+.sub{
+margin-top:10px;
+font-size:18px;
+letter-spacing:3px;
+}
+.contenedor{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:30px;
+padding:40px;
+}
+.clan{
+width:350px;
+background:rgba(0,0,0,.5);
+border:2px solid #ff6a00;
+border-radius:15px;
+overflow:hidden;
+box-shadow:
+0 0 15px rgba(255,106,0,.3);
+}
+.clan img{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+.nombre{
+font-size:28px;
+font-weight:bold;
+margin-top:15px;
+}
+.resultado{
+font-size:26px;
+color:#ff7a00;
+margin:15px;
+font-weight:bold;
+}
+.fecha{
+margin-bottom:20px;
+color:#ccc;
+}
+.boton{
+display:inline-block;
+margin-top:20px;
+margin-bottom:40px;
+background:#ff7a00;
+color:black;
+padding:15px 40px;
+font-weight:bold;
+text-decoration:none;
+border-radius:8px;
+}
+button.boton{
+background:#ff7a00;
+color:black;
+padding:15px 35px;
+border:none;
+border-radius:8px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+</style>
+</head>
+<body>
+<h1>🏆 CLANES DERROTADOS</h1>
+<div class="sub">
+HISTORIAL DE VICTORIAS VX VORTEX 666
+</div>
+<div style="margin-top:20px;">
+<a href="AgregarClan.html" class="boton">
+🏆 AGREGAR VICTORIA
+</a>
+</div>
+<div class="contenedor">
+<div class="clan">
+<img src="logo.png">
+<div class="nombre">
+DRAGON TEAM
+</div>
+<div class="resultado">
+VX VORTEX 4 - 0
+</div>
+<div class="fecha">
+25/06/2026
+</div>
+</div>
+<div class="clan">
+<img src="logo.png">
+<div class="nombre">
+SHADOW FORCE
+</div>
+<div class="resultado">
+VX VORTEX 3 - 1
+</div>
+<div class="fecha">
+20/06/2026
+</div>
+</div>
+<div class="clan">
+<img src="logo.png">
+<div class="nombre">
+BLACK DEMONS
+</div>
+<div class="resultado">
+VX VORTEX 4 - 2
+</div>
+<div class="fecha">
+15/06/2026
+</div>
+</div>
+</div>
+<a href="index.html" class="boton">⬅ VOLVER
+</a>
+</body>
+</html>
