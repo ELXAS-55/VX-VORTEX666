@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Agregar integrante — VX VORTEX⁶⁶⁶</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0908;--panel:#15110f;--ember:#ff6a1f;--blood:#9c1822;--ash:#9a9ca3;--parchment:#ece4d8;--pdim:#b8aea0;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--parchment);font-family:"Rajdhani",sans-serif;min-height:100vh;overflow-x:hidden;}
+h1,h2,h3{font-family:"Anton",sans-serif;text-transform:uppercase;letter-spacing:.02em;}
+a{color:inherit;text-decoration:none;}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--ember);outline-offset:3px;}
+/* NAV */
+nav{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 5vw;background:rgba(10,9,8,.94);backdrop-filter:blur(6px);z-index:100;border-bottom:1px solid #221a16;}
+.nav-brand{display:flex;align-items:center;gap:10px;font-family:"Anton";font-size:.98rem;letter-spacing:.05em;}
+.nav-brand img{width:32px;height:32px;border-radius:50%;border:2px solid var(--ember);}
+.nav-links{display:flex;gap:20px;font-size:.8rem;font-weight:600;letter-spacing:.07em;flex-wrap:wrap;}
+.nav-links a{opacity:.72;transition:opacity .2s,color .2s;}
+.nav-links a.active,.nav-links a:hover{opacity:1;color:var(--ember);}
+/* BOTONES */
+.btn{display:inline-block;padding:13px 28px;font-family:"Rajdhani";font-weight:700;letter-spacing:.08em;
+  font-size:.85rem;text-transform:uppercase;border-radius:2px;border:2px solid transparent;
+  cursor:pointer;transition:transform .15s,background .2s,color .2s;text-decoration:none;}
+.btn-primary{background:var(--ember);color:#1a0a02;border-color:var(--ember);}
+.btn-primary:hover{transform:translateY(-2px);background:#ff7d3d;}
+.btn-ghost{border-color:var(--ash);color:var(--parchment);background:transparent;}
+.btn-ghost:hover{border-color:var(--ember);color:var(--ember);transform:translateY(-2px);}
+.btn-block{display:block;width:100%;max-width:680px;margin:14px auto;padding:18px;font-size:1.1rem;
+  text-align:center;font-family:"Anton";letter-spacing:.05em;border-radius:4px;}
+/* PÁGINA HEAD */
+.pagehead{padding:58px 5vw 36px;border-bottom:1px solid #221a16;
+  background:radial-gradient(circle at 50% 0%,rgba(156,24,34,.18),transparent 60%);}
+.eyebrow{color:var(--ember);font-size:.76rem;letter-spacing:.3em;font-weight:700;margin-bottom:9px;}
+.pagehead h1{font-size:clamp(2rem,6vw,3.4rem);}
+.pagehead p{margin-top:10px;color:var(--pdim);max-width:600px;}
+main{padding:52px 5vw 86px;}
+/* GRIDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;}
+.nav-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;}
+/* TARJETA PERSONA */
+.card{background:var(--panel);border:1px solid #2a221d;border-radius:5px;overflow:hidden;
+  transition:transform .2s,border-color .2s;}
+.card:hover{transform:translateY(-4px);border-color:#3a2a20;}
+.card-photo{width:100%;aspect-ratio:1/1;background:linear-gradient(135deg,var(--blood),var(--ember));
+  display:flex;align-items:center;justify-content:center;font-family:"Anton";font-size:2.2rem;
+  color:#1a0a02;position:relative;overflow:hidden;}
+.card-photo img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.card-body{padding:15px 17px 20px;}
+.card-body h3{font-size:1.08rem;}
+.tag{display:inline-block;margin-top:5px;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ember);font-weight:700;background:rgba(255,106,31,.1);padding:3px 8px;border-radius:2px;}
+.card-quote{margin-top:9px;font-size:.84rem;color:var(--pdim);font-style:italic;
+  border-left:2px solid var(--ember);padding-left:8px;line-height:1.4;}
+/* TARJETA CLAN */
+.clan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px;}
+.clan-card{background:var(--panel);border:1px solid #2a221d;border-radius:5px;overflow:hidden;
+  transition:transform .2s,border-color .2s;}
+.clan-card:hover{transform:translateY(-4px);border-color:#3a2a20;}
+.clan-img{width:100%;aspect-ratio:16/10;background:#0d0a09;display:flex;align-items:center;
+  justify-content:center;color:var(--pdim);font-size:.78rem;overflow:hidden;}
+.clan-img img{width:100%;height:100%;object-fit:cover;}
+.clan-body{padding:13px 16px 17px;}
+.clan-body h3{font-size:1rem;}
+.clan-res{margin-top:4px;font-size:.8rem;color:var(--ember);font-weight:700;}
+.clan-date{margin-top:3px;font-size:.73rem;color:var(--pdim);}
+/* NAV CARD */
+.nav-card{background:var(--panel);border:1px solid #2a221d;padding:26px 20px;border-radius:5px;
+  display:flex;flex-direction:column;gap:8px;transition:transform .2s,border-color .2s;position:relative;overflow:hidden;}
+.nav-card::before{content:"";position:absolute;top:0;left:0;width:3px;height:100%;
+  background:var(--ember);transform:scaleY(0);transition:transform .2s;transform-origin:top;}
+.nav-card:hover{transform:translateY(-4px);border-color:#3a2a20;}
+.nav-card:hover::before{transform:scaleY(1);}
+.nav-card .ico{font-size:1.6rem;}
+.nav-card h3{font-size:1.15rem;}
+.nav-card p{font-size:.85rem;color:var(--pdim);}
+.nav-card .go{margin-top:auto;color:var(--ember);font-size:.76rem;font-weight:700;letter-spacing:.06em;}
+/* FORMS */
+.form-wrap{max-width:500px;background:var(--panel);border:1px solid #2a221d;border-radius:5px;padding:30px;}
+form.fx{display:flex;flex-direction:column;gap:15px;}
+.lbl{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pdim);font-weight:600;display:block;margin-bottom:5px;}
+.finput{background:#0d0a09;border:1px solid #2a221d;color:var(--parchment);
+  padding:12px 13px;font-family:"Rajdhani";font-size:.97rem;border-radius:2px;width:100%;}
+.finput:focus{border-color:var(--ember);outline:none;}
+.upload-box{border:1.5px dashed #3a2a20;border-radius:3px;padding:20px;text-align:center;
+  color:var(--pdim);font-size:.84rem;cursor:pointer;transition:border-color .2s;display:block;margin-top:6px;}
+.upload-box:hover{border-color:var(--ember);color:var(--parchment);}
+.upload-box input[type=file]{display:none;}
+.preview-img{width:100%;max-height:160px;margin-top:10px;border-radius:3px;object-fit:cover;display:none;}
+.note{font-size:.73rem;color:var(--pdim);background:#0d0a09;border:1px solid #221a16;padding:9px 12px;border-radius:3px;}
+.msg{padding:11px 15px;border-radius:3px;font-size:.86rem;font-weight:600;display:none;margin-top:4px;}
+.msg.ok{background:rgba(50,200,100,.12);border:1px solid rgba(50,200,100,.35);color:#5fda8f;}
+.msg.err{background:rgba(200,50,50,.12);border:1px solid rgba(200,50,50,.35);color:#da5f5f;}
+.empty{color:var(--pdim);font-size:.93rem;padding:36px 0;text-align:center;}
+.toolbar{display:flex;justify-content:flex-end;margin-bottom:26px;}
+/* MODAL */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);justify-content:center;align-items:center;z-index:999;}
+.modal.show{display:flex;}
+.modal-box{background:#0f0c0b;border:2px solid var(--ember);border-radius:6px;
+  padding:30px;width:500px;max-width:92%;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-box h2{font-family:"Anton";color:var(--ember);font-size:1.5rem;margin-bottom:16px;}
+.modal-close{position:absolute;top:14px;right:18px;font-size:1.6rem;cursor:pointer;color:var(--pdim);background:none;border:none;}
+.modal-close:hover{color:var(--parchment);}
+/* ADMIN */
+.admin-card{background:var(--panel);border:1px solid #2a221d;border-radius:5px;padding:22px;margin-bottom:16px;}
+.admin-card h3{font-size:1.1rem;color:var(--parchment);}
+.admin-card p{font-size:.88rem;color:var(--pdim);margin-top:5px;}
+.admin-card .estado-badge{display:inline-block;padding:3px 10px;border-radius:2px;font-size:.7rem;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:8px;}
+.estado-pendiente{background:rgba(255,180,0,.15);color:#ffb400;border:1px solid rgba(255,180,0,.3);}
+.estado-aprobado{background:rgba(50,200,100,.12);color:#5fda8f;border:1px solid rgba(50,200,100,.3);}
+.estado-rechazado{background:rgba(200,50,50,.12);color:#da5f5f;border:1px solid rgba(200,50,50,.3);}
+.btn-aprobar{background:rgba(50,200,100,.2);color:#5fda8f;border:1px solid rgba(50,200,100,.4);}
+.btn-rechazar{background:rgba(200,50,50,.2);color:#da5f5f;border:1px solid rgba(200,50,50,.4);}
+.campana{background:var(--ember);color:#1a0a02;padding:10px 18px;border-radius:30px;
+  font-family:"Anton";font-size:1rem;cursor:pointer;border:none;}
+/* STATS */
+.stats{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;margin:30px 0;}
+.stat-card{width:220px;padding:22px;border:1px solid #2a221d;background:var(--panel);border-radius:5px;text-align:center;}
+.stat-card h2{font-size:3rem;color:var(--ember);font-family:"Anton";}
+.stat-card p{margin-top:8px;font-size:1rem;color:var(--pdim);}
+footer{padding:36px 5vw;text-align:center;border-top:1px solid #2a1f1a;color:var(--pdim);font-size:.8rem;}
+footer .fbrand{font-family:"Anton";color:var(--parchment);margin-bottom:6px;}
+@media(max-width:700px){.nav-links{display:none;}.btn-block{font-size:.95rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-brand">
+    <img src="data:image/jpeg;base64,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" alt="logo"> VX VORTEX⁶⁶⁶
+  </a>
+  <div class="nav-links"><a href="index.html" class="">Inicio</a><a href="liderazgo.html" class="">Liderazgo</a><a href="integrantes.html" class="active">Integrantes</a><a href="clanes.html" class="">Clanes</a><a href="login.html">Admin</a></div>
+</nav>
+
+<section class="pagehead">
+  <div class="eyebrow">NUEVO MIEMBRO</div>
+  <h1>Agregar integrante</h1>
+  <p>Completa el nombre, rango y sube la foto de perfil de Free Fire.</p>
+</section>
+<main>
+  <div class="form-wrap">
+    <form class="fx" id="fInt">
+      <div><label class="lbl">Nombre en el juego</label>
+        <input class="finput" id="iNombre" placeholder="VX NuevoNick" required></div>
+      <div><label class="lbl">Rango / etiqueta</label>
+        <input class="finput" id="iRango" placeholder="veterano, nueva escuela, miembro..."></div>
+      <div>
+        <label class="lbl">Foto de perfil (Free Fire)</label>
+        <label class="upload-box" id="uploadBox">
+          📷 Toca para subir la foto
+          <input type="file" id="fotoFile" accept="image/*">
+        </label>
+        <img id="preview" class="preview-img">
+      </div>
+      <div id="msgInt" class="msg"></div>
+      <button type="submit" class="btn btn-primary">Guardar integrante</button>
+    </form>
+  </div>
+  <p style="margin-top:20px;"><a href="integrantes.html" class="btn btn-ghost">← Volver</a></p>
+</main>
+
+<footer><div class="fbrand">VX VORTEX⁶⁶⁶</div><p>Clan de Free Fire © 2026</p></footer>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+if(!window._fbInit){
+  firebase.initializeApp({
+  apiKey: "AIzaSyD6IbhFlbhrCNy1lPpJ49_By3tt-aGiDJQ",
+  authDomain: "vx-vortex-666-288f7.firebaseapp.com",
+  projectId: "vx-vortex-666-288f7",
+  storageBucket: "vx-vortex-666-288f7.firebasestorage.app",
+  messagingSenderId: "1053204421634",
+  appId: "1:1053204421634:web:74871508e1b22371c39b1b"
+});
+  window._db = firebase.firestore();
+  window._fbInit = true;
+}
+</script>
+<script>
+function comprimir(file, maxKB=150){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const c=document.createElement("canvas");
+        let w=img.width,h=img.height,max=600;
+        if(w>max){h=h*(max/w);w=max;}
+        if(h>max){w=w*(max/h);h=max;}
+        c.width=w;c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h);
+        let q=0.85,result=c.toDataURL("image/jpeg",q);
+        while(result.length>maxKB*1024*1.37&&q>0.3){q-=0.1;result=c.toDataURL("image/jpeg",q);}
+        res(result);
+      };
+      img.src=e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+document.getElementById("fotoFile").addEventListener("change", async e=>{
+  const file=e.target.files[0]; if(!file)return;
+  document.getElementById("uploadBox").textContent="⏳ Comprimiendo...";
+  window._fotoB64 = await comprimir(file);
+  document.getElementById("preview").src=window._fotoB64;
+  document.getElementById("preview").style.display="block";
+  document.getElementById("uploadBox").textContent="✅ "+file.name;
+});
+document.getElementById("fInt").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const el=document.getElementById("msgInt");
+  el.textContent="⏳ Guardando...";el.className="msg ok";el.style.display="block";
+  try{
+    await window._db.collection("integrantes").add({
+      nombre: document.getElementById("iNombre").value,
+      rango: document.getElementById("iRango").value,
+      foto: window._fotoB64||null,
+      fecha: new Date().toISOString()
+    });
+    el.textContent="✅ Integrante guardado correctamente.";
+    e.target.reset();
+    document.getElementById("preview").style.display="none";
+    document.getElementById("uploadBox").textContent="📷 Toca para subir la foto";
+    window._fotoB64=null;
+  }catch(err){el.textContent="❌ Error: "+err.message;el.className="msg err";}
+});
+</script>
+</body>
+</html>

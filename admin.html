@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Administrador — VX VORTEX 666</title>
+
+<style>
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+background:#0a0908;
+color:#ece4d8;
+font-family:Arial,sans-serif;
+padding:25px;
+}
+
+h1,h2,h3{
+color:#ff6a1f;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:20px;
+flex-wrap:wrap;
+margin-bottom:35px;
+}
+
+.campana{
+background:#ff6a1f;
+color:#111;
+padding:12px 20px;
+border-radius:30px;
+font-weight:bold;
+}
+
+.seccion{
+margin:35px auto;
+max-width:1000px;
+}
+
+.tarjeta{
+background:#15110f;
+border:1px solid #3a2a20;
+border-radius:8px;
+padding:20px;
+margin:15px 0;
+}
+
+button{
+padding:11px 16px;
+margin:5px;
+border:none;
+border-radius:5px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.aprobar{
+background:#22c55e;
+color:white;
+}
+
+.rechazar,
+.eliminar{
+background:#ef4444;
+color:white;
+}
+
+.editar{
+background:#ff6a1f;
+color:#111;
+}
+
+.agregar{
+background:#22c55e;
+color:white;
+}
+
+input,select{
+width:100%;
+padding:12px;
+margin:7px 0;
+background:#0d0a09;
+color:white;
+border:1px solid #3a2a20;
+border-radius:5px;
+}
+
+.modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.85);
+justify-content:center;
+align-items:center;
+z-index:999;
+padding:20px;
+}
+
+.modal-box{
+background:#15110f;
+border:2px solid #ff6a1f;
+border-radius:10px;
+padding:25px;
+width:500px;
+max-width:100%;
+max-height:90vh;
+overflow:auto;
+}
+
+.cerrar{
+float:right;
+font-size:28px;
+cursor:pointer;
+}
+
+.foto{
+width:80px;
+height:80px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid #ff6a1f;
+}
+
+.fila{
+display:flex;
+align-items:center;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.badge{
+display:inline-block;
+padding:5px 10px;
+border-radius:4px;
+background:#ff6a1f;
+color:#111;
+font-weight:bold;
+}
+
+hr{
+border:none;
+border-top:1px solid #3a2a20;
+margin:30px 0;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>👑 PANEL ADMINISTRADOR</h1>
+<div class="campana" id="campana">🔔 0</div>
+</header>
+
+<!-- SOLICITUDES -->
+<section class="seccion">
+
+<h2>📋 Solicitudes de ingreso</h2>
+
+<div id="listaSolicitudes">
+Cargando solicitudes...
+</div>
+
+</section>
+
+<hr>
+
+<!-- INTEGRANTES -->
+<section class="seccion">
+
+<h2>👥 ADMINISTRAR INTEGRANTES</h2>
+
+<button class="agregar" onclick="abrirAgregarIntegrante()">
+➕ AGREGAR INTEGRANTE
+</button>
+
+<div id="listaIntegrantes">
+Cargando integrantes...
+</div>
+
+</section>
+
+<hr>
+
+<!-- LIDERAZGO -->
+<section class="seccion">
+
+<h2>👑 LIDERAZGO INTERNO</h2>
+
+<button class="agregar" onclick="abrirAgregarLider()">
+➕ AGREGAR LÍDER / CARGO
+</button>
+
+<div id="listaLiderazgo">
+Cargando liderazgo...
+</div>
+
+</section>
+
+<hr>
+
+<!-- DECANOS -->
+<section class="seccion">
+
+<h2>⚜️ DECANOS</h2>
+
+<button class="agregar" onclick="abrirAgregarDecano()">
+➕ AGREGAR DECANO
+</button>
+
+<div id="listaDecanos">
+Cargando decanos...
+</div>
+
+</section>
+
+<!-- MODAL APROBAR -->
+<div class="modal" id="modalAprobacion">
+
+<div class="modal-box">
+
+<span class="cerrar" onclick="cerrarModal('modalAprobacion')">×</span>
+
+<h2>✅ Aprobar jugador</h2>
+
+<input type="date" id="fechaPrueba">
+<input type="time" id="horaPrueba">
+
+<input
+id="reglasPrueba"
+placeholder="Reglas de la prueba">
+
+<input
+id="mensajePrueba"
+placeholder="Mensaje para el jugador">
+
+<button class="aprobar" onclick="guardarAprobacion()">
+GUARDAR APROBACIÓN
+</button>
+
+</div>
+
+</div>
+
+<!-- MODAL EDITAR INTEGRANTE -->
+<div class="modal" id="modalEditar">
+
+<div class="modal-box">
+
+<span class="cerrar" onclick="cerrarModal('modalEditar')">×</span>
+
+<h2>✏️ Editar integrante</h2>
+
+<input id="editNombre" placeholder="Nombre">
+
+<input id="editRango" placeholder="Rango">
+
+<input id="editNivel" type="number" placeholder="Nivel">
+
+<input id="editVictorias" type="number" placeholder="Victorias">
+
+<input id="editDerrotas" type="number" placeholder="Derrotas">
+
+<input id="editFoto" placeholder="URL de la foto">
+
+<button class="editar" onclick="guardarEdicion()">
+💾 GUARDAR CAMBIOS
+</button>
+
+</div>
+
+</div>
+
+<!-- MODAL AGREGAR INTEGRANTE -->
+<div class="modal" id="modalAgregar">
+
+<div class="modal-box">
+
+<span class="cerrar" onclick="cerrarModal('modalAgregar')">×</span>
+
+<h2>➕ Agregar integrante</h2>
+
+<input id="nuevoNombre" placeholder="Nombre">
+
+<input id="nuevoRango" placeholder="Rango">
+
+<input id="nuevoNivel" type="number" placeholder="Nivel">
+
+<input id="nuevoFoto" placeholder="URL de la foto">
+
+<button class="agregar" onclick="guardarNuevoIntegrante()">
+➕ AGREGAR
+</button>
+
+</div>
+
+</div>
+
+<!-- MODAL LIDERAZGO -->
+<div class="modal" id="modalLider">
+
+<div class="modal-box">
+
+<span class="cerrar" onclick="cerrarModal('modalLider')">×</span>
+
+<h2>👑 Agregar liderazgo</h2>
+
+<input id="liderNombre" placeholder="Nombre">
+
+<input id="liderCargo" placeholder="Cargo: Líder interno, Capitán, etc.">
+
+<input id="liderFoto" placeholder="URL de la foto">
+
+<button class="agregar" onclick="guardarLider()">
+➕ GUARDAR
+</button>
+
+</div>
+
+</div>
+
+<!-- MODAL DECANO -->
+<div class="modal" id="modalDecano">
+
+<div class="modal-box">
+
+<span class="cerrar" onclick="cerrarModal('modalDecano')">×</span>
+
+<h2>⚜️ Agregar decano</h2>
+
+<input id="decanoNombre" placeholder="Nombre">
+
+<input id="decanoFoto" placeholder="URL de la foto">
+
+<button class="agregar" onclick="guardarDecano()">
+➕ GUARDAR
+</button>
+
+</div>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyD6IbhFlbhrCNy1lPpJ49_By3tt-aGiDJQ",
+
+authDomain:"vx-vortex-666.firebaseapp.com",
+
+projectId:"vx-vortex-666",
+
+storageBucket:"vx-vortex-666.firebasestorage.app",
+
+messagingSenderId:"1053204421634",
+
+appId:"1:1053204421634:web:74871508e1b22371c39b1b"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db=firebase.firestore();
+
+let solicitudActual="";
+let integranteActual="";
+
+/* SOLICITUDES */
+
+db.collection("solicitudes").onSnapshot(snapshot=>{
+
+let pendientes=0;
+
+let html="";
+
+snapshot.forEach(doc=>{
+
+const s=doc.data();
+
+if(s.estado==="Pendiente") pendientes++;
+
+html+=`
+
+<div class="tarjeta">
+
+<h3>${s.nombreJuego||"Sin nombre"}</h3>
+
+<p>🎂 Edad: ${s.edad||"-"}</p>
+
+<p>🆔 ID: ${s.idJuego||"-"}</p>
+
+<p>⭐ Nivel: ${s.nivel||"-"}</p>
+
+<p>📱 ${s.contactoTipo||""}: ${s.contacto||"-"}</p>
+
+<p>Estado: <span class="badge">${s.estado||"Pendiente"}</span></p>
+
+<button class="aprobar"
+onclick="aprobar('${doc.id}')">
+
+✅ Aprobar
+
+</button>
+
+<button class="rechazar"
+onclick="rechazar('${doc.id}')">
+
+❌ Rechazar
+
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("campana").innerHTML="🔔 "+pendientes;
+
+document.getElementById("listaSolicitudes").innerHTML=
+
+html||"No hay solicitudes.";
+
+});
+
+/* APROBAR */
+
+function aprobar(id){
+
+solicitudActual=id;
+
+document.getElementById("modalAprobacion").style.display="flex";
+
+}
+
+function guardarAprobacion(){
+
+const fecha=document.getElementById("fechaPrueba").value;
+
+const hora=document.getElementById("horaPrueba").value;
+
+const reglas=document.getElementById("reglasPrueba").value;
+
+const mensaje=document.getElementById("mensajePrueba").value;
+
+db.collection("solicitudes").doc(solicitudActual).update({
+
+estado:"Aprobado",
+
+fechaPrueba:fecha,
+
+horaPrueba:hora,
+
+reglas:reglas,
+
+mensaje:mensaje
+
+}).then(()=>{
+
+alert("✅ Jugador aprobado");
+
+cerrarModal("modalAprobacion");
+
+});
+
+}
+
+/* RECHAZAR */
+
+function rechazar(id){
+
+if(confirm("¿Rechazar esta solicitud?")){
+
+db.collection("solicitudes").doc(id).update({
+
+estado:"Rechazado"
+
+});
+
+}
+
+}
+
+/* INTEGRANTES */
+
+db.collection("integrantes").onSnapshot(snapshot=>{
+
+let html="";
+
+snapshot.forEach(doc=>{
+
+const m=doc.data();
+
+html+=`
+
+<div class="tarjeta">
+
+<div class="fila">
+
+${m.foto?
+
+`<img class="foto" src="${m.foto}">`
+
+:"👤"}
+
+<div>
+
+<h3>${m.nombre||"Sin nombre"}</h3>
+
+<p>🎖 ${m.rango||"Miembro"}</p>
+
+<p>⭐ Nivel: ${m.nivel||0}</p>
+
+<p>🏆 Victorias: ${m.victorias||0}</p>
+
+<p>❌ Derrotas: ${m.derrotas||0}</p>
+
+</div>
+
+</div>
+
+<button class="editar"
+onclick="editarIntegrante('${doc.id}')">
+
+✏️ EDITAR
+
+</button>
+
+<button class="eliminar"
+onclick="eliminarIntegrante('${doc.id}')">
+
+🚫 ELIMINAR
+
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("listaIntegrantes").innerHTML=
+
+html||"No hay integrantes guardados en Firebase.";
+
+});
+
+/* EDITAR */
+
+async function editarIntegrante(id){
+
+integranteActual=id;
+
+const doc=await db.collection("integrantes").doc(id).get();
+
+const m=doc.data();
+
+document.getElementById("editNombre").value=m.nombre||"";
+
+document.getElementById("editRango").value=m.rango||"";
+
+document.getElementById("editNivel").value=m.nivel||0;
+
+document.getElementById("editVictorias").value=m.victorias||0;
+
+document.getElementById("editDerrotas").value=m.derrotas||0;
+
+document.getElementById("editFoto").value=m.foto||"";
+
+document.getElementById("modalEditar").style.display="flex";
+
+}
+
+function guardarEdicion(){
+
+db.collection("integrantes").doc(integranteActual).update({
+
+nombre:document.getElementById("editNombre").value,
+
+rango:document.getElementById("editRango").value,
+
+nivel:Number(document.getElementById("editNivel").value),
+
+victorias:Number(document.getElementById("editVictorias").value),
+
+derrotas:Number(document.getElementById("editDerrotas").value),
+
+foto:document.getElementById("editFoto").value
+
+}).then(()=>{
+
+alert("✅ Cambios guardados");
+
+cerrarModal("modalEditar");
+
+});
+
+}
+
+function eliminarIntegrante(id){
+
+if(confirm("¿Eliminar este integrante?")){
+
+db.collection("integrantes").doc(id).delete();
+
+}
+
+}
+
+/* AGREGAR INTEGRANTE */
+
+function abrirAgregarIntegrante(){
+
+document.getElementById("modalAgregar").style.display="flex";
+
+}
+
+function guardarNuevoIntegrante(){
+
+db.collection("integrantes").add({
+
+nombre:document.getElementById("nuevoNombre").value,
+
+rango:document.getElementById("nuevoRango").value,
+
+nivel:Number(document.getElementById("nuevoNivel").value)||0,
+
+victorias:0,
+
+derrotas:0,
+
+foto:document.getElementById("nuevoFoto").value,
+
+fecha:Date.now(),
+
+estado:"Activo"
+
+}).then(()=>{
+
+alert("✅ Integrante agregado");
+
+cerrarModal("modalAgregar");
+
+});
+
+}
+
+/* LIDERAZGO */
+
+db.collection("liderazgo").onSnapshot(snapshot=>{
+
+let html="";
+
+snapshot.forEach(doc=>{
+
+const m=doc.data();
+
+html+=`
+
+<div class="tarjeta">
+
+<h3>👑 ${m.nombre}</h3>
+
+<p>🎖 ${m.cargo}</p>
+
+<button class="editar"
+onclick="editarCargo('${doc.id}','${m.nombre}','${m.cargo}')">
+
+✏️ EDITAR
+
+</button>
+
+<button class="eliminar"
+onclick="eliminarCargo('liderazgo','${doc.id}')">
+
+🚫 ELIMINAR
+
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("listaLiderazgo").innerHTML=
+
+html||"No hay cargos registrados.";
+
+});
+
+/* DECANOS */
+
+db.collection("decanos").onSnapshot(snapshot=>{
+
+let html="";
+
+snapshot.forEach(doc=>{
+
+const m=doc.data();
+
+html+=`
+
+<div class="tarjeta">
+
+<h3>⚜️ ${m.nombre}</h3>
+
+<p>Decano</p>
+
+<button class="editar"
+onclick="editarDecano('${doc.id}','${m.nombre}')">
+
+✏️ EDITAR
+
+</button>
+
+<button class="eliminar"
+onclick="eliminarCargo('decanos','${doc.id}')">
+
+🚫 ELIMINAR
+
+</button>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("listaDecanos").innerHTML=
+
+html||"No hay decanos registrados.";
+
+});
+
+/* AGREGAR LIDER */
+
+function abrirAgregarLider(){
+
+document.getElementById("modalLider").style.display="flex";
+
+}
+
+function guardarLider(){
+
+db.collection("liderazgo").add({
+
+nombre:document.getElementById("liderNombre").value,
+
+cargo:document.getElementById("liderCargo").value,
+
+foto:document.getElementById("liderFoto").value
+
+}).then(()=>{
+
+alert("✅ Cargo agregado");
+
+cerrarModal("modalLider");
+
+});
+
+}
+
+/* AGREGAR DECANO */
+
+function abrirAgregarDecano(){
+
+document.getElementById("modalDecano").style.display="flex";
+
+}
+
+function guardarDecano(){
+
+db.collection("decanos").add({
+
+nombre:document.getElementById("decanoNombre").value,
+
+foto:document.getElementById("decanoFoto").value
+
+}).then(()=>{
+
+alert("✅ Decano agregado");
+
+cerrarModal("modalDecano");
+
+});
+
+}
+
+/* EDITAR CARGO */
+
+function editarCargo(id,nombre,cargo){
+
+const nuevoNombre=prompt("Nombre:",nombre);
+
+if(nuevoNombre===null)return;
+
+const nuevoCargo=prompt("Cargo:",cargo);
+
+if(nuevoCargo===null)return;
+
+db.collection("liderazgo").doc(id).update({
+
+nombre:nuevoNombre,
+
+cargo:nuevoCargo
+
+});
+
+}
+
+function editarDecano(id,nombre){
+
+const nuevoNombre=prompt("Nombre:",nombre);
+
+if(nuevoNombre===null)return;
+
+db.collection("decanos").doc(id).update({
+
+nombre:nuevoNombre
+
+});
+
+}
+
+/* ELIMINAR */
+
+function eliminarCargo(coleccion,id){
+
+if(confirm("¿Eliminar este registro?")){
+
+db.collection(coleccion).doc(id).delete();
+
+}
+
+}
+
+/* CERRAR MODALES */
+
+function cerrarModal(id){
+
+document.getElementById(id).style.display="none";
+
+}
+
+window.addEventListener("click",function(e){
+
+document.querySelectorAll(".modal").forEach(modal=>{
+
+if(e.target===modal){
+
+modal.style.display="none";
+
+}
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
