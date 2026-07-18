@@ -2,94 +2,91 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Administrador — VX VORTEX 666</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Administrador VX VORTEX 666</title>
 
 <style>
-*{
-box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
-margin:0;
-background:#0a0908;
-color:#ece4d8;
+background:#0b0b0b;
+color:white;
 font-family:Arial,sans-serif;
 padding:25px;
+margin:0
 }
 
-h1,h2,h3{
-color:#ff6a1f;
-}
+h1,h2,h3{color:#ff6a00}
 
 header{
 display:flex;
 justify-content:space-between;
 align-items:center;
+margin-bottom:30px;
 gap:20px;
-flex-wrap:wrap;
-margin-bottom:35px;
+flex-wrap:wrap
 }
 
-.campana{
-background:#ff6a1f;
-color:#111;
-padding:12px 20px;
-border-radius:30px;
-font-weight:bold;
+#campana{
+background:#ff6a00;
+color:black;
+padding:14px 20px;
+border-radius:50px;
+font-size:20px;
+font-weight:bold
 }
 
 .seccion{
-margin:35px auto;
 max-width:1000px;
+margin:35px auto
 }
 
 .tarjeta{
-background:#15110f;
-border:1px solid #3a2a20;
-border-radius:8px;
+background:#1a1a1a;
+border:2px solid #ff6a00;
 padding:20px;
 margin:15px 0;
+border-radius:10px
+}
+
+.fila{
+display:flex;
+align-items:center;
+gap:20px;
+flex-wrap:wrap
+}
+
+.foto{
+width:90px;
+height:90px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid #ff6a00
 }
 
 button{
-padding:11px 16px;
-margin:5px;
-border:none;
-border-radius:5px;
-font-weight:bold;
+padding:12px 18px;
+margin:7px 5px 0 0;
+font-size:15px;
 cursor:pointer;
+border:none;
+border-radius:6px;
+font-weight:bold
 }
 
-.aprobar{
+.aprobar,.agregar{
 background:#22c55e;
-color:white;
+color:white
 }
 
-.rechazar,
-.eliminar{
+.rechazar,.eliminar{
 background:#ef4444;
-color:white;
+color:white
 }
 
 .editar{
-background:#ff6a1f;
-color:#111;
-}
-
-.agregar{
-background:#22c55e;
-color:white;
-}
-
-input,select{
-width:100%;
-padding:12px;
-margin:7px 0;
-background:#0d0a09;
-color:white;
-border:1px solid #3a2a20;
-border-radius:5px;
+background:#ff6a00;
+color:black
 }
 
 .modal{
@@ -99,55 +96,56 @@ inset:0;
 background:rgba(0,0,0,.85);
 justify-content:center;
 align-items:center;
-z-index:999;
-padding:20px;
+z-index:9999;
+padding:20px
 }
 
 .modal-box{
-background:#15110f;
-border:2px solid #ff6a1f;
-border-radius:10px;
+background:#111;
 padding:25px;
+border:2px solid #ff6a00;
+border-radius:10px;
 width:500px;
 max-width:100%;
 max-height:90vh;
-overflow:auto;
+overflow:auto
+}
+
+input,textarea,select{
+width:100%;
+padding:13px;
+margin:8px 0;
+background:#222;
+color:white;
+border:1px solid #ff6a00;
+border-radius:6px
+}
+
+textarea{
+min-height:100px;
+resize:vertical
 }
 
 .cerrar{
 float:right;
-font-size:28px;
-cursor:pointer;
+font-size:30px;
+cursor:pointer
 }
 
-.foto{
-width:80px;
-height:80px;
-border-radius:50%;
-object-fit:cover;
-border:2px solid #ff6a1f;
-}
-
-.fila{
-display:flex;
-align-items:center;
-gap:15px;
-flex-wrap:wrap;
+hr{
+border:none;
+border-top:1px solid #333;
+margin:40px auto;
+max-width:1000px
 }
 
 .badge{
 display:inline-block;
 padding:5px 10px;
-border-radius:4px;
-background:#ff6a1f;
-color:#111;
-font-weight:bold;
-}
-
-hr{
-border:none;
-border-top:1px solid #3a2a20;
-margin:30px 0;
+background:#ff6a00;
+color:black;
+border-radius:5px;
+font-weight:bold
 }
 </style>
 </head>
@@ -156,13 +154,12 @@ margin:30px 0;
 
 <header>
 <h1>👑 PANEL ADMINISTRADOR</h1>
-<div class="campana" id="campana">🔔 0</div>
+<div id="campana">🔔 0</div>
 </header>
 
-<!-- SOLICITUDES -->
 <section class="seccion">
 
-<h2>📋 Solicitudes de ingreso</h2>
+<h2>📋 SOLICITUDES DE INGRESO</h2>
 
 <div id="listaSolicitudes">
 Cargando solicitudes...
@@ -172,7 +169,6 @@ Cargando solicitudes...
 
 <hr>
 
-<!-- INTEGRANTES -->
 <section class="seccion">
 
 <h2>👥 ADMINISTRAR INTEGRANTES</h2>
@@ -189,7 +185,6 @@ Cargando integrantes...
 
 <hr>
 
-<!-- LIDERAZGO -->
 <section class="seccion">
 
 <h2>👑 LIDERAZGO INTERNO</h2>
@@ -206,7 +201,6 @@ Cargando liderazgo...
 
 <hr>
 
-<!-- DECANOS -->
 <section class="seccion">
 
 <h2>⚜️ DECANOS</h2>
@@ -222,6 +216,7 @@ Cargando decanos...
 </section>
 
 <!-- MODAL APROBAR -->
+
 <div class="modal" id="modalAprobacion">
 
 <div class="modal-box">
@@ -231,32 +226,29 @@ Cargando decanos...
 <h2>✅ Aprobar jugador</h2>
 
 <input type="date" id="fechaPrueba">
+
 <input type="time" id="horaPrueba">
 
-<input
-id="reglasPrueba"
-placeholder="Reglas de la prueba">
+<textarea id="reglasPrueba" placeholder="Escribe las reglas de la prueba"></textarea>
 
-<input
-id="mensajePrueba"
-placeholder="Mensaje para el jugador">
+<textarea id="mensajePrueba" placeholder="Escribe el mensaje para el jugador"></textarea>
 
 <button class="aprobar" onclick="guardarAprobacion()">
-GUARDAR APROBACIÓN
+💾 GUARDAR APROBACIÓN
 </button>
 
 </div>
-
 </div>
 
-<!-- MODAL EDITAR INTEGRANTE -->
-<div class="modal" id="modalEditar">
+<!-- EDITAR INTEGRANTE -->
+
+<div class="modal" id="modalEditarIntegrante">
 
 <div class="modal-box">
 
-<span class="cerrar" onclick="cerrarModal('modalEditar')">×</span>
+<span class="cerrar" onclick="cerrarModal('modalEditarIntegrante')">×</span>
 
-<h2>✏️ Editar integrante</h2>
+<h2>✏️ EDITAR INTEGRANTE</h2>
 
 <input id="editNombre" placeholder="Nombre">
 
@@ -270,22 +262,22 @@ GUARDAR APROBACIÓN
 
 <input id="editFoto" placeholder="URL de la foto">
 
-<button class="editar" onclick="guardarEdicion()">
+<button class="editar" onclick="guardarEdicionIntegrante()">
 💾 GUARDAR CAMBIOS
 </button>
 
 </div>
-
 </div>
 
-<!-- MODAL AGREGAR INTEGRANTE -->
-<div class="modal" id="modalAgregar">
+<!-- AGREGAR INTEGRANTE -->
+
+<div class="modal" id="modalAgregarIntegrante">
 
 <div class="modal-box">
 
-<span class="cerrar" onclick="cerrarModal('modalAgregar')">×</span>
+<span class="cerrar" onclick="cerrarModal('modalAgregarIntegrante')">×</span>
 
-<h2>➕ Agregar integrante</h2>
+<h2>➕ AGREGAR INTEGRANTE</h2>
 
 <input id="nuevoNombre" placeholder="Nombre">
 
@@ -300,21 +292,21 @@ GUARDAR APROBACIÓN
 </button>
 
 </div>
-
 </div>
 
-<!-- MODAL LIDERAZGO -->
+<!-- AGREGAR LÍDER -->
+
 <div class="modal" id="modalLider">
 
 <div class="modal-box">
 
 <span class="cerrar" onclick="cerrarModal('modalLider')">×</span>
 
-<h2>👑 Agregar liderazgo</h2>
+<h2>👑 AGREGAR LÍDER / CARGO</h2>
 
 <input id="liderNombre" placeholder="Nombre">
 
-<input id="liderCargo" placeholder="Cargo: Líder interno, Capitán, etc.">
+<input id="liderCargo" placeholder="Cargo">
 
 <input id="liderFoto" placeholder="URL de la foto">
 
@@ -323,17 +315,17 @@ GUARDAR APROBACIÓN
 </button>
 
 </div>
-
 </div>
 
-<!-- MODAL DECANO -->
+<!-- AGREGAR DECANO -->
+
 <div class="modal" id="modalDecano">
 
 <div class="modal-box">
 
 <span class="cerrar" onclick="cerrarModal('modalDecano')">×</span>
 
-<h2>⚜️ Agregar decano</h2>
+<h2>⚜️ AGREGAR DECANO</h2>
 
 <input id="decanoNombre" placeholder="Nombre">
 
@@ -344,7 +336,6 @@ GUARDAR APROBACIÓN
 </button>
 
 </div>
-
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -353,19 +344,12 @@ GUARDAR APROBACIÓN
 <script>
 
 const firebaseConfig = {
-
 apiKey:"AIzaSyD6IbhFlbhrCNy1lPpJ49_By3tt-aGiDJQ",
-
-authDomain:"vx-vortex-666.firebaseapp.com",
-
-projectId:"vx-vortex-666",
-
+authDomain:"vx-vortex-666-288f7.firebaseapp.com",
+projectId:"vx-vortex-666-288f7",
 storageBucket:"vx-vortex-666.firebasestorage.app",
-
 messagingSenderId:"1053204421634",
-
 appId:"1:1053204421634:web:74871508e1b22371c39b1b"
-
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -380,20 +364,21 @@ let integranteActual="";
 db.collection("solicitudes").onSnapshot(snapshot=>{
 
 let pendientes=0;
-
 let html="";
 
 snapshot.forEach(doc=>{
 
 const s=doc.data();
 
-if(s.estado==="Pendiente") pendientes++;
+if(s.estado==="Pendiente"){
+pendientes++;
+}
 
 html+=`
 
 <div class="tarjeta">
 
-<h3>${s.nombreJuego||"Sin nombre"}</h3>
+<h3>🎮 ${s.nombreJuego||"Sin nombre"}</h3>
 
 <p>🎂 Edad: ${s.edad||"-"}</p>
 
@@ -403,24 +388,19 @@ html+=`
 
 <p>📱 ${s.contactoTipo||""}: ${s.contacto||"-"}</p>
 
-<p>Estado: <span class="badge">${s.estado||"Pendiente"}</span></p>
+<p>Estado:
+<span class="badge">${s.estado||"Pendiente"}</span>
+</p>
 
-<button class="aprobar"
-onclick="aprobar('${doc.id}')">
-
-✅ Aprobar
-
+<button class="aprobar" onclick="aprobar('${doc.id}')">
+✅ APROBAR
 </button>
 
-<button class="rechazar"
-onclick="rechazar('${doc.id}')">
-
-❌ Rechazar
-
+<button class="rechazar" onclick="rechazar('${doc.id}')">
+❌ RECHAZAR
 </button>
 
 </div>
-
 `;
 
 });
@@ -428,12 +408,9 @@ onclick="rechazar('${doc.id}')">
 document.getElementById("campana").innerHTML="🔔 "+pendientes;
 
 document.getElementById("listaSolicitudes").innerHTML=
-
 html||"No hay solicitudes.";
 
 });
-
-/* APROBAR */
 
 function aprobar(id){
 
@@ -445,27 +422,22 @@ document.getElementById("modalAprobacion").style.display="flex";
 
 function guardarAprobacion(){
 
-const fecha=document.getElementById("fechaPrueba").value;
-
-const hora=document.getElementById("horaPrueba").value;
-
-const reglas=document.getElementById("reglasPrueba").value;
-
-const mensaje=document.getElementById("mensajePrueba").value;
-
-db.collection("solicitudes").doc(solicitudActual).update({
+db.collection("solicitudes")
+.doc(solicitudActual)
+.update({
 
 estado:"Aprobado",
 
-fechaPrueba:fecha,
+fechaPrueba:document.getElementById("fechaPrueba").value,
 
-horaPrueba:hora,
+horaPrueba:document.getElementById("horaPrueba").value,
 
-reglas:reglas,
+reglas:document.getElementById("reglasPrueba").value,
 
-mensaje:mensaje
+mensaje:document.getElementById("mensajePrueba").value
 
-}).then(()=>{
+})
+.then(()=>{
 
 alert("✅ Jugador aprobado");
 
@@ -475,16 +447,14 @@ cerrarModal("modalAprobacion");
 
 }
 
-/* RECHAZAR */
-
 function rechazar(id){
 
 if(confirm("¿Rechazar esta solicitud?")){
 
-db.collection("solicitudes").doc(id).update({
-
+db.collection("solicitudes")
+.doc(id)
+.update({
 estado:"Rechazado"
-
 });
 
 }
@@ -507,17 +477,13 @@ html+=`
 
 <div class="fila">
 
-${m.foto?
-
-`<img class="foto" src="${m.foto}">`
-
-:"👤"}
+${m.foto ? `<img class="foto" src="${m.foto}">` : "👤"}
 
 <div>
 
 <h3>${m.nombre||"Sin nombre"}</h3>
 
-<p>🎖 ${m.rango||"Miembro"}</p>
+<p>🎖 Rango: ${m.rango||"Miembro"}</p>
 
 <p>⭐ Nivel: ${m.nivel||0}</p>
 
@@ -529,33 +495,23 @@ ${m.foto?
 
 </div>
 
-<button class="editar"
-onclick="editarIntegrante('${doc.id}')">
-
+<button class="editar" onclick="editarIntegrante('${doc.id}')">
 ✏️ EDITAR
-
 </button>
 
-<button class="eliminar"
-onclick="eliminarIntegrante('${doc.id}')">
-
+<button class="eliminar" onclick="eliminarIntegrante('${doc.id}')">
 🚫 ELIMINAR
-
 </button>
 
 </div>
-
 `;
 
 });
 
 document.getElementById("listaIntegrantes").innerHTML=
-
-html||"No hay integrantes guardados en Firebase.";
+html||"No hay integrantes guardados.";
 
 });
-
-/* EDITAR */
 
 async function editarIntegrante(id){
 
@@ -577,31 +533,34 @@ document.getElementById("editDerrotas").value=m.derrotas||0;
 
 document.getElementById("editFoto").value=m.foto||"";
 
-document.getElementById("modalEditar").style.display="flex";
+document.getElementById("modalEditarIntegrante").style.display="flex";
 
 }
 
-function guardarEdicion(){
+function guardarEdicionIntegrante(){
 
-db.collection("integrantes").doc(integranteActual).update({
+db.collection("integrantes")
+.doc(integranteActual)
+.update({
 
 nombre:document.getElementById("editNombre").value,
 
 rango:document.getElementById("editRango").value,
 
-nivel:Number(document.getElementById("editNivel").value),
+nivel:Number(document.getElementById("editNivel").value)||0,
 
-victorias:Number(document.getElementById("editVictorias").value),
+victorias:Number(document.getElementById("editVictorias").value)||0,
 
-derrotas:Number(document.getElementById("editDerrotas").value),
+derrotas:Number(document.getElementById("editDerrotas").value)||0,
 
 foto:document.getElementById("editFoto").value
 
-}).then(()=>{
+})
+.then(()=>{
 
-alert("✅ Cambios guardados");
+alert("✅ Integrante actualizado");
 
-cerrarModal("modalEditar");
+cerrarModal("modalEditarIntegrante");
 
 });
 
@@ -617,11 +576,9 @@ db.collection("integrantes").doc(id).delete();
 
 }
 
-/* AGREGAR INTEGRANTE */
-
 function abrirAgregarIntegrante(){
 
-document.getElementById("modalAgregar").style.display="flex";
+document.getElementById("modalAgregarIntegrante").style.display="flex";
 
 }
 
@@ -645,11 +602,12 @@ fecha:Date.now(),
 
 estado:"Activo"
 
-}).then(()=>{
+})
+.then(()=>{
 
 alert("✅ Integrante agregado");
 
-cerrarModal("modalAgregar");
+cerrarModal("modalAgregarIntegrante");
 
 });
 
@@ -669,81 +627,37 @@ html+=`
 
 <div class="tarjeta">
 
-<h3>👑 ${m.nombre}</h3>
+<div class="fila">
 
-<p>🎖 ${m.cargo}</p>
+${m.foto ? `<img class="foto" src="${m.foto}">` : "👑"}
 
-<button class="editar"
-onclick="editarCargo('${doc.id}','${m.nombre}','${m.cargo}')">
+<div>
 
-✏️ EDITAR
+<h3>${m.nombre||"Sin nombre"}</h3>
 
-</button>
-
-<button class="eliminar"
-onclick="eliminarCargo('liderazgo','${doc.id}')">
-
-🚫 ELIMINAR
-
-</button>
+<p>🎖 Cargo: ${m.cargo||"Líder interno"}</p>
 
 </div>
 
+</div>
+
+<button class="editar" onclick="editarCargo('${doc.id}')">
+✏️ EDITAR
+</button>
+
+<button class="eliminar" onclick="eliminarCargo('liderazgo','${doc.id}')">
+🚫 ELIMINAR
+</button>
+
+</div>
 `;
 
 });
 
 document.getElementById("listaLiderazgo").innerHTML=
-
-html||"No hay cargos registrados.";
-
-});
-
-/* DECANOS */
-
-db.collection("decanos").onSnapshot(snapshot=>{
-
-let html="";
-
-snapshot.forEach(doc=>{
-
-const m=doc.data();
-
-html+=`
-
-<div class="tarjeta">
-
-<h3>⚜️ ${m.nombre}</h3>
-
-<p>Decano</p>
-
-<button class="editar"
-onclick="editarDecano('${doc.id}','${m.nombre}')">
-
-✏️ EDITAR
-
-</button>
-
-<button class="eliminar"
-onclick="eliminarCargo('decanos','${doc.id}')">
-
-🚫 ELIMINAR
-
-</button>
-
-</div>
-
-`;
+html||"No hay liderazgo registrado.";
 
 });
-
-document.getElementById("listaDecanos").innerHTML=
-
-html||"No hay decanos registrados.";
-
-});
-
-/* AGREGAR LIDER */
 
 function abrirAgregarLider(){
 
@@ -761,9 +675,10 @@ cargo:document.getElementById("liderCargo").value,
 
 foto:document.getElementById("liderFoto").value
 
-}).then(()=>{
+})
+.then(()=>{
 
-alert("✅ Cargo agregado");
+alert("✅ Líder agregado");
 
 cerrarModal("modalLider");
 
@@ -771,7 +686,93 @@ cerrarModal("modalLider");
 
 }
 
-/* AGREGAR DECANO */
+async function editarCargo(id){
+
+const doc=await db.collection("liderazgo").doc(id).get();
+
+const m=doc.data();
+
+const nuevoNombre=prompt("Nombre del líder:",m.nombre||"");
+
+if(nuevoNombre===null)return;
+
+const nuevoCargo=prompt("Cargo:",m.cargo||"");
+
+if(nuevoCargo===null)return;
+
+const nuevaFoto=prompt("URL de la foto:",m.foto||"");
+
+if(nuevaFoto===null)return;
+
+db.collection("liderazgo")
+.doc(id)
+.update({
+
+nombre:nuevoNombre,
+
+cargo:nuevoCargo,
+
+foto:nuevaFoto
+
+});
+
+}
+
+function eliminarCargo(coleccion,id){
+
+if(confirm("¿Eliminar este registro?")){
+
+db.collection(coleccion).doc(id).delete();
+
+}
+
+}
+
+/* DECANOS */
+
+db.collection("decanos").onSnapshot(snapshot=>{
+
+let html="";
+
+snapshot.forEach(doc=>{
+
+const m=doc.data();
+
+html+=`
+
+<div class="tarjeta">
+
+<div class="fila">
+
+${m.foto ? `<img class="foto" src="${m.foto}">` : "⚜️"}
+
+<div>
+
+<h3>${m.nombre||"Sin nombre"}</h3>
+
+<p>⚜️ Decano</p>
+
+</div>
+
+</div>
+
+<button class="editar" onclick="editarDecano('${doc.id}')">
+✏️ EDITAR
+</button>
+
+<button class="eliminar" onclick="eliminarCargo('decanos','${doc.id}')">
+🚫 ELIMINAR
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("listaDecanos").innerHTML=
+html||"No hay decanos registrados.";
+
+});
 
 function abrirAgregarDecano(){
 
@@ -787,7 +788,8 @@ nombre:document.getElementById("decanoNombre").value,
 
 foto:document.getElementById("decanoFoto").value
 
-}).then(()=>{
+})
+.then(()=>{
 
 alert("✅ Decano agregado");
 
@@ -797,55 +799,33 @@ cerrarModal("modalDecano");
 
 }
 
-/* EDITAR CARGO */
+async function editarDecano(id){
 
-function editarCargo(id,nombre,cargo){
+const doc=await db.collection("decanos").doc(id).get();
 
-const nuevoNombre=prompt("Nombre:",nombre);
+const m=doc.data();
+
+const nuevoNombre=prompt("Nombre del decano:",m.nombre||"");
 
 if(nuevoNombre===null)return;
 
-const nuevoCargo=prompt("Cargo:",cargo);
+const nuevaFoto=prompt("URL de la foto:",m.foto||"");
 
-if(nuevoCargo===null)return;
+if(nuevaFoto===null)return;
 
-db.collection("liderazgo").doc(id).update({
+db.collection("decanos")
+.doc(id)
+.update({
 
 nombre:nuevoNombre,
 
-cargo:nuevoCargo
+foto:nuevaFoto
 
 });
 
 }
 
-function editarDecano(id,nombre){
-
-const nuevoNombre=prompt("Nombre:",nombre);
-
-if(nuevoNombre===null)return;
-
-db.collection("decanos").doc(id).update({
-
-nombre:nuevoNombre
-
-});
-
-}
-
-/* ELIMINAR */
-
-function eliminarCargo(coleccion,id){
-
-if(confirm("¿Eliminar este registro?")){
-
-db.collection(coleccion).doc(id).delete();
-
-}
-
-}
-
-/* CERRAR MODALES */
+/* CERRAR */
 
 function cerrarModal(id){
 
