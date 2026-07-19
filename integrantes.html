@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Integrantes | VX VORTEX⁶⁶⁶</title>
+
+<style>
+
+:root{
+  --bg:#080808;
+  --card:#111;
+  --red:#b51f2d;
+  --red2:#e52b3b;
+  --text:#fff;
+  --dim:#aaa;
+  --border:#292929;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+}
+
+nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:18px 5%;
+  background:#0d0d0d;
+  border-bottom:1px solid var(--border);
+}
+
+.brand{
+  color:white;
+  text-decoration:none;
+  font-weight:bold;
+  font-size:1.1rem;
+}
+
+.nav-links{
+  display:flex;
+  gap:20px;
+}
+
+.nav-links a{
+  color:#aaa;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+.nav-links a:hover,
+.nav-links a.active{
+  color:white;
+}
+
+.pagehead{
+  text-align:center;
+  padding:60px 20px 40px;
+}
+
+.eyebrow{
+  color:var(--red2);
+  font-size:.8rem;
+  font-weight:bold;
+  letter-spacing:2px;
+  margin-bottom:12px;
+}
+
+.pagehead h1{
+  font-size:clamp(2rem,5vw,3.5rem);
+  margin-bottom:12px;
+}
+
+.pagehead p{
+  color:var(--dim);
+}
+
+main{
+  width:90%;
+  max-width:1200px;
+  margin:auto;
+  padding-bottom:60px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  overflow:hidden;
+  transition:.25s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  border-color:var(--red);
+}
+
+.card-photo{
+  height:260px;
+  background:linear-gradient(135deg,#1b1b1b,#090909);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:5rem;
+  font-weight:bold;
+  color:var(--red2);
+  overflow:hidden;
+}
+
+.card-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.card-body{
+  padding:20px;
+}
+
+.card-body h3{
+  font-size:1.25rem;
+  margin-bottom:10px;
+}
+
+.tag{
+  display:inline-block;
+  background:rgba(181,31,45,.15);
+  border:1px solid rgba(229,43,59,.4);
+  color:#ff6874;
+  padding:6px 10px;
+  border-radius:20px;
+  font-size:.8rem;
+  font-weight:bold;
+}
+
+.level{
+  color:var(--dim);
+  margin-top:12px;
+}
+
+.empty{
+  text-align:center;
+  color:var(--dim);
+  padding:40px;
+}
+
+footer{
+  text-align:center;
+  padding:30px 20px;
+  border-top:1px solid var(--border);
+  color:var(--dim);
+}
+
+.fbrand{
+  color:white;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+@media(max-width:700px){
+
+  nav{
+    flex-direction:column;
+    gap:15px;
+  }
+
+  .nav-links{
+    gap:12px;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  .card-photo{
+    height:230px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<a href="index.html" class="brand">
+  ⚡ VX VORTEX⁶⁶⁶
+</a>
+
+<div class="nav-links">
+
+<a href="index.html">
+  Inicio
+</a>
+
+<a href="liderazgo.html">
+  Liderazgo
+</a>
+
+<a href="integrantes.html" class="active">
+  Integrantes
+</a>
+
+<a href="clanes.html">
+  Clanes
+</a>
+
+<a href="login.html">
+  Admin
+</a>
+
+</div>
+
+</nav>
+
+
+<section class="pagehead">
+
+<div class="eyebrow">
+  NUESTRO EQUIPO
+</div>
+
+<h1>
+  Integrantes
+</h1>
+
+<p>
+  Conoce a los miembros de VX VORTEX⁶⁶⁶.
+</p>
+
+</section>
+
+
+<main>
+
+<div id="gridIntegrantes" class="grid">
+
+<p class="empty">
+  Cargando integrantes...
+</p>
+
+</div>
+
+</main>
+
+
+<footer>
+
+<div class="fbrand">
+  VX VORTEX⁶⁶⁶
+</div>
+
+<p>
+  Clan de Free Fire © 2026
+</p>
+
+</footer>
+
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+
+<script>
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyD6IbhFlbhrCNy1lPpJ49_By3tt-aGiDJQ",
+
+  authDomain: "vx-vortex-666-288f7.firebaseapp.com",
+
+  projectId: "vx-vortex-666-288f7",
+
+  storageBucket: "vx-vortex-666-288f7.firebasestorage.app",
+
+  messagingSenderId: "1053204421634",
+
+  appId: "1:1053204421634:web:74871508e1b22371c39b1b"
+
+};
+
+
+firebase.initializeApp(firebaseConfig);
+
+
+const db = firebase.firestore();
+
+
+const grid = document.getElementById("gridIntegrantes");
+
+
+db.collection("integrantes").onSnapshot(snapshot => {
+
+  grid.innerHTML = "";
+
+
+  if(snapshot.empty){
+
+    grid.innerHTML = `
+
+      <p class="empty">
+
+        No hay integrantes registrados todavía.
+
+      </p>
+
+    `;
+
+    return;
+
+  }
+
+
+  snapshot.forEach(doc => {
+
+    const integrante = doc.data();
+
+
+    const nombre = integrante.nombre || "Sin nombre";
+
+    const rango = integrante.rango || integrante.nivel || "Miembro";
+
+    const foto = integrante.foto || "";
+
+    const inicial = nombre.trim().charAt(0).toUpperCase();
+
+
+    grid.innerHTML += `
+
+      <div class="card">
+
+        <div class="card-photo">
+
+          ${
+            foto
+              ? `<img src="${foto}" alt="${nombre}">`
+              : inicial
+          }
+
+        </div>
+
+
+        <div class="card-body">
+
+          <h3>
+
+            ${nombre}
+
+          </h3>
+
+
+          <span class="tag">
+
+            ${rango}
+
+          </span>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+
+}, error => {
+
+  console.error(error);
+
+
+  grid.innerHTML = `
+
+    <p class="empty">
+
+      ❌ No se pudieron cargar los integrantes.
+
+    </p>
+
+  `;
+
+});
+
+</script>
+
+</body>
+</html>

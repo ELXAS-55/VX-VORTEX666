@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Administrador | VX VORTEX⁶⁶⁶</title>
+<style>
+:root{--bg:#080808;--panel:#111;--ember:#ff6a00;--text:#fff;--dim:#aaa;--border:#292929}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 5%;background:#0d0d0d;border-bottom:1px solid var(--border)}
+.nav-brand{color:white;text-decoration:none;font-weight:bold;font-size:1.1rem}
+.nav-links{display:flex;gap:20px}.nav-links a{color:#aaa;text-decoration:none;font-weight:bold}.nav-links a:hover{color:white}
+.pagehead{padding:45px 5%;text-align:center}.pagehead h1{font-size:clamp(2rem,5vw,3.5rem)}.eyebrow{color:var(--ember);font-weight:bold;letter-spacing:2px;margin-bottom:10px}
+main{width:90%;max-width:1100px;margin:auto;padding-bottom:60px}
+section{margin-bottom:45px}.section-title{margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:12px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:15px}
+.card h3{margin-bottom:8px}.card p{color:var(--dim);margin:5px 0}
+button{border:0;border-radius:7px;padding:11px 16px;cursor:pointer;font-weight:bold;margin:5px 5px 0 0}
+.btn-green{background:#22c55e;color:#fff}.btn-red{background:#ef4444;color:#fff}.btn-orange{background:var(--ember);color:#000}.btn-gray{background:#333;color:#fff}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);justify-content:center;align-items:center;z-index:9999;padding:20px}
+.modal.show{display:flex}.modal-box{background:#111;border:2px solid var(--ember);border-radius:12px;padding:25px;width:520px;max-width:100%;max-height:90vh;overflow:auto;position:relative}
+.close{position:absolute;right:16px;top:10px;background:none;color:#fff;font-size:28px}
+label{display:block;margin-top:12px;margin-bottom:5px;color:#bbb;font-size:.9rem}
+input,textarea,select{width:100%;padding:12px;background:#222;color:#fff;border:1px solid #444;border-radius:6px}
+textarea{resize:vertical;min-height:90px}
+.filebox{border:1px dashed var(--ember);padding:16px;text-align:center;border-radius:7px;margin-top:8px;cursor:pointer;color:#bbb}
+.filebox input{display:none}.preview{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:10px;display:none}
+.badge{display:inline-block;padding:5px 10px;border-radius:15px;font-size:.8rem;margin:5px 0;background:#333}
+.pending{color:#ffb400}.approved{color:#5fda8f}.rejected{color:#da5f5f}
+.item-row{display:flex;gap:15px;align-items:center}.item-row img{width:75px;height:75px;object-fit:cover;border-radius:50%}
+.empty{text-align:center;color:var(--dim);padding:25px}
+@media(max-width:700px){nav{flex-direction:column;gap:15px}.nav-links{gap:10px;flex-wrap:wrap;justify-content:center}.item-row{align-items:flex-start}}
+</style>
+</head>
+<body>
+
+<nav>
+<a href="index.html" class="nav-brand">⚡ VX VORTEX⁶⁶⁶</a>
+<div class="nav-links">
+<a href="index.html">Inicio</a>
+<a href="liderazgo.html">Liderazgo</a>
+<a href="integrantes.html">Integrantes</a>
+<a href="clanes.html">Clanes</a>
+<a href="login.html">Admin</a>
+</div>
+</nav>
+
+<section class="pagehead">
+<div class="eyebrow">SOLO ADMINISTRADOR</div>
+<h1>Panel Administrador</h1>
+<p>Administra solicitudes, integrantes y liderazgo.</p>
+</section>
+
+<main>
+
+<section>
+<h2 class="section-title">📋 Solicitudes de ingreso</h2>
+<div id="listaSolicitudes"><p class="empty">Cargando solicitudes...</p></div>
+</section>
+
+<section>
+<h2 class="section-title">👥 Integrantes</h2>
+<button class="btn-orange" onclick="abrirAgregarIntegrante()">➕ AGREGAR INTEGRANTE</button>
+<div id="listaIntegrantes"><p class="empty">Cargando integrantes...</p></div>
+</section>
+
+<section>
+<h2 class="section-title">👑 Liderazgo</h2>
+<button class="btn-orange" onclick="abrirAgregarLider()">➕ AGREGAR LÍDER / CARGO</button>
+<div id="listaLiderazgo"><p class="empty">Cargando liderazgo...</p></div>
+</section>
+
+
+<section>
+<h2 class="section-title">🏆 Clanes derrotados</h2>
+<button class="btn-orange" onclick="abrirAgregarClan()">➕ AGREGAR CLAN DERROTADO</button>
+<div id="listaClanes"><p class="empty">Cargando clanes derrotados...</p></div>
+</section>
+
+</main>
+
+<!-- MODAL APROBAR -->
+<div class="modal" id="modalAprobacion">
+<div class="modal-box">
+<button class="close" onclick="cerrarModal('modalAprobacion')">×</button>
+<h2>✅ Aprobar y agregar integrante</h2>
+<p style="color:#aaa;margin-top:8px">Después de guardar, la solicitud se eliminará y el jugador aparecerá en Integrantes.</p>
+<label>Rango</label>
+<select id="rangoAprobacion">
+<option>Recluta</option><option>Miembro</option><option>Veterano</option><option>Elite</option>
+</select>
+<label>Foto del jugador</label>
+<label class="filebox">📷 Elegir foto<input type="file" id="fotoAprobacion" accept="image/*" onchange="previsualizar(this,'previewAprobacion')"></label>
+<img id="previewAprobacion" class="preview">
+<button class="btn-green" onclick="guardarAprobacion()">✅ APROBAR Y AGREGAR</button>
+<button class="btn-gray" onclick="cerrarModal('modalAprobacion')">Cancelar</button>
+</div>
+</div>
+
+<!-- MODAL AGREGAR INTEGRANTE -->
+<div class="modal" id="modalAgregarIntegrante">
+<div class="modal-box">
+<button class="close" onclick="cerrarModal('modalAgregarIntegrante')">×</button>
+<h2>➕ Agregar integrante</h2>
+<label>Nombre</label><input id="nuevoNombre">
+<label>Rango</label>
+<select id="nuevoRango"><option>Recluta</option><option>Miembro</option><option>Veterano</option><option>Elite</option></select>
+<label>Nivel</label><input id="nuevoNivel" type="number" value="0">
+<label>Foto</label>
+<label class="filebox">📷 Elegir foto<input type="file" id="nuevoFoto" accept="image/*" onchange="previsualizar(this,'previewNuevo')"></label>
+<img id="previewNuevo" class="preview">
+<button class="btn-green" onclick="guardarNuevoIntegrante()">Guardar</button>
+</div>
+</div>
+
+<!-- MODAL EDITAR INTEGRANTE -->
+<div class="modal" id="modalEditarIntegrante">
+<div class="modal-box">
+<button class="close" onclick="cerrarModal('modalEditarIntegrante')">×</button>
+<h2>✏️ Editar integrante</h2>
+<label>Nombre</label><input id="editNombre">
+<label>Rango</label>
+<select id="editRango"><option>Recluta</option><option>Miembro</option><option>Veterano</option><option>Elite</option></select>
+<label>Nivel</label><input id="editNivel" type="number">
+<label>Foto</label>
+<label class="filebox">📷 Cambiar foto<input type="file" id="editFoto" accept="image/*" onchange="previsualizar(this,'previewEdit')"></label>
+<img id="previewEdit" class="preview">
+<button class="btn-green" onclick="guardarEdicionIntegrante()">Guardar cambios</button>
+</div>
+</div>
+
+<!-- MODAL AGREGAR LIDER -->
+<div class="modal" id="modalLider">
+<div class="modal-box">
+<button class="close" onclick="cerrarModal('modalLider')">×</button>
+<h2>👑 Agregar liderazgo</h2>
+<label>Nombre</label><input id="liderNombre">
+<label>Cargo</label>
+<select id="liderCargo"><option>Líder</option><option>Líder interno</option><option>Decano</option><option>Decana</option></select>
+<label>Frase</label><textarea id="liderFrase"></textarea>
+<label>Foto</label>
+<label class="filebox">📷 Elegir foto<input type="file" id="liderFoto" accept="image/*" onchange="previsualizar(this,'previewLider')"></label>
+<img id="previewLider" class="preview">
+<button class="btn-green" onclick="guardarLider()">Guardar</button>
+</div>
+</div>
+
+
+<div class="modal" id="modalClan">
+<div class="modal-box">
+<button class="close" onclick="cerrarModal('modalClan')">×</button>
+<h2>🏆 Agregar clan derrotado</h2>
+<label>Nombre del clan</label><input id="clanNombre" placeholder="Ej: BLACK DEMONS">
+<label>Resultado</label><input id="clanResultado" placeholder="Ej: VX VORTEX 4 - 2">
+<label>Fecha</label><input id="clanFecha" type="date">
+<label>Foto o logo del clan</label>
+<label class="filebox">📷 Elegir foto<input type="file" id="clanFoto" accept="image/*" onchange="previsualizar(this,'previewClan')"></label>
+<img id="previewClan" class="preview">
+<button class="btn-green" onclick="guardarClan()">Guardar victoria</button>
+</div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+apiKey:"AIzaSyD6IbhFlbhrCNy1lPpJ49_By3tt-aGiDJQ",
+authDomain:"vx-vortex-666-288f7.firebaseapp.com",
+projectId:"vx-vortex-666-288f7",
+storageBucket:"vx-vortex-666-288f7.firebasestorage.app",
+messagingSenderId:"1053204421634",
+appId:"1:1053204421634:web:74871508e1b22371c39b1b"
+});
+const db=firebase.firestore();
+let solicitudActual=null;
+let integranteActual=null;
+
+function abrirModal(id){document.getElementById(id).classList.add("show")}
+function cerrarModal(id){document.getElementById(id).classList.remove("show")}
+function aprobar(id){solicitudActual=id;abrirModal("modalAprobacion")}
+function rechazar(id){
+if(confirm("¿Rechazar esta solicitud?")){
+db.collection("solicitudes").doc(id).delete()
+.then(()=>alert("❌ Solicitud eliminada."));
+}}
+function previsualizar(input,id){
+const file=input.files[0];const img=document.getElementById(id);
+if(file){img.src=URL.createObjectURL(file);img.style.display="block"}
+}
+function leerFoto(input){
+return new Promise(resolve=>{
+const file=input.files[0];
+if(!file)return resolve("");
+const reader=new FileReader();
+reader.onload=e=>resolve(e.target.result);
+reader.readAsDataURL(file);
+});
+}
+
+/* SOLICITUDES */
+db.collection("solicitudes").orderBy("fechaSolicitud","desc").onSnapshot(snap=>{
+const lista=document.getElementById("listaSolicitudes");lista.innerHTML="";
+if(snap.empty){lista.innerHTML='<p class="empty">No hay solicitudes.</p>';return}
+snap.forEach(doc=>{
+const s=doc.data();
+if(s.estado!=="Pendiente")return;
+lista.innerHTML+=`
+<div class="card">
+<h3>${s.nombreJuego||"Sin nombre"}</h3>
+<span class="badge pending">Pendiente</span>
+<p>Edad: ${s.edad||"-"} | ID: ${s.idJuego||"-"} | Nivel: ${s.nivel||"-"}</p>
+<p>${s.contactoTipo||"Contacto"}: ${s.contacto||"-"}</p>
+<button class="btn-green" onclick="aprobar('${doc.id}')">✅ APROBAR / AGREGAR</button>
+<button class="btn-red" onclick="rechazar('${doc.id}')">❌ RECHAZAR</button>
+</div>`;
+});
+if(!lista.innerHTML)lista.innerHTML='<p class="empty">No hay solicitudes pendientes.</p>';
+});
+
+/* APROBAR: CREA INTEGRANTE Y BORRA SOLICITUD */
+async function guardarAprobacion(){
+try{
+if(!solicitudActual){alert("No hay solicitud seleccionada.");return}
+const solicitud=await db.collection("solicitudes").doc(solicitudActual).get();
+if(!solicitud.exists){alert("La solicitud ya no existe.");return}
+const s=solicitud.data();
+const foto=await leerFoto(document.getElementById("fotoAprobacion"));
+await db.collection("integrantes").add({
+nombre:s.nombreJuego||"Sin nombre",
+rango:document.getElementById("rangoAprobacion").value,
+nivel:Number(s.nivel)||0,
+victorias:0,derrotas:0,mvp:0,guerras:0,
+foto:foto,estado:"Activo",fecha:Date.now(),
+fechaIngreso:new Date().toLocaleDateString("es-CO"),
+idJuego:s.idJuego||"",edad:s.edad||"",contacto:s.contacto||""
+});
+await db.collection("solicitudes").doc(solicitudActual).delete();
+alert("✅ Jugador aprobado y agregado a Integrantes.");
+cerrarModal("modalAprobacion");
+document.getElementById("fotoAprobacion").value="";
+document.getElementById("previewAprobacion").style.display="none";
+solicitudActual=null;
+}catch(e){console.error(e);alert("❌ Error al aprobar: "+e.message)}
+}
+
+/* INTEGRANTES */
+db.collection("integrantes").orderBy("fecha","desc").onSnapshot(snap=>{
+const lista=document.getElementById("listaIntegrantes");lista.innerHTML="";
+if(snap.empty){lista.innerHTML='<p class="empty">No hay integrantes.</p>';return}
+snap.forEach(doc=>{
+const m=doc.data();
+lista.innerHTML+=`
+<div class="card">
+<div class="item-row">
+${m.foto?`<img src="${m.foto}">`:"👤"}
+<div><h3>${m.nombre||"Sin nombre"}</h3><p>${m.rango||"Miembro"} | Nivel ${m.nivel||0}</p></div>
+</div>
+<button class="btn-orange" onclick="editarIntegrante('${doc.id}')">✏️ EDITAR</button>
+<button class="btn-red" onclick="eliminarIntegrante('${doc.id}')">🗑️ ELIMINAR</button>
+</div>`;
+});
+});
+function abrirAgregarIntegrante(){abrirModal("modalAgregarIntegrante")}
+async function guardarNuevoIntegrante(){
+const foto=await leerFoto(document.getElementById("nuevoFoto"));
+await db.collection("integrantes").add({
+nombre:document.getElementById("nuevoNombre").value,
+rango:document.getElementById("nuevoRango").value,
+nivel:Number(document.getElementById("nuevoNivel").value)||0,
+victorias:0,derrotas:0,mvp:0,guerras:0,foto,estado:"Activo",fecha:Date.now()
+});
+alert("✅ Integrante agregado");cerrarModal("modalAgregarIntegrante");
+}
+async function editarIntegrante(id){
+integranteActual=id;const d=await db.collection("integrantes").doc(id).get();const m=d.data();
+document.getElementById("editNombre").value=m.nombre||"";
+document.getElementById("editRango").value=m.rango||"Miembro";
+document.getElementById("editNivel").value=m.nivel||0;
+abrirModal("modalEditarIntegrante");
+}
+async function guardarEdicionIntegrante(){
+const foto=await leerFoto(document.getElementById("editFoto"));
+const data={nombre:document.getElementById("editNombre").value,rango:document.getElementById("editRango").value,nivel:Number(document.getElementById("editNivel").value)||0};
+if(foto)data.foto=foto;
+await db.collection("integrantes").doc(integranteActual).update(data);
+alert("✅ Integrante actualizado");cerrarModal("modalEditarIntegrante");
+}
+async function eliminarIntegrante(id){
+if(confirm("¿Eliminar este integrante?"))await db.collection("integrantes").doc(id).delete();
+}
+
+/* LIDERAZGO */
+db.collection("liderazgo").onSnapshot(snap=>{
+const lista=document.getElementById("listaLiderazgo");lista.innerHTML="";
+if(snap.empty){lista.innerHTML='<p class="empty">No hay liderazgo.</p>';return}
+snap.forEach(doc=>{
+const m=doc.data();
+lista.innerHTML+=`
+<div class="card">
+<div class="item-row">
+${m.foto?`<img src="${m.foto}">`:"👑"}
+<div><h3>${m.nombre||"Sin nombre"}</h3><p>${m.cargo||"Líder"}</p>${m.frase?`<p>“${m.frase}”</p>`:""}</div>
+</div>
+<button class="btn-orange" onclick="editarLider('${doc.id}')">✏️ EDITAR</button>
+<button class="btn-red" onclick="eliminarLider('${doc.id}')">🗑️ ELIMINAR</button>
+</div>`;
+});
+});
+function abrirAgregarLider(){abrirModal("modalLider")}
+async function guardarLider(){
+const foto=await leerFoto(document.getElementById("liderFoto"));
+await db.collection("liderazgo").add({
+nombre:document.getElementById("liderNombre").value,
+cargo:document.getElementById("liderCargo").value,
+frase:document.getElementById("liderFrase").value,
+foto
+});
+alert("✅ Liderazgo agregado");cerrarModal("modalLider");
+}
+
+async function editarLider(id){
+const d=await db.collection("liderazgo").doc(id).get();
+const m=d.data();
+const nombre=prompt("Nombre:",m.nombre||""); if(nombre===null)return;
+const cargo=prompt("Cargo:",m.cargo||""); if(cargo===null)return;
+const frase=prompt("Frase:",m.frase||""); if(frase===null)return;
+await db.collection("liderazgo").doc(id).update({nombre,cargo,frase});
+alert("✅ Liderazgo actualizado.");
+}
+
+async function eliminarLider(id){
+if(confirm("¿Eliminar este cargo?"))await db.collection("liderazgo").doc(id).delete();
+}
+
+/* CLANES DERROTADOS: SOLO ADMIN */
+db.collection("clanes").orderBy("fechaISO","desc").onSnapshot(snap=>{
+const lista=document.getElementById("listaClanes");
+lista.innerHTML="";
+if(snap.empty){lista.innerHTML='<p class="empty">No hay clanes derrotados registrados.</p>';return}
+snap.forEach(doc=>{
+const c=doc.data();
+lista.innerHTML+=`
+<div class="card">
+<div class="item-row">
+${c.foto?`<img src="${c.foto}">`:"🏆"}
+<div><h3>${c.nombre||"Sin nombre"}</h3><p>${c.resultado||"Sin resultado"}</p><p>${c.fecha||""}</p></div>
+</div>
+<button class="btn-red" onclick="eliminarClan('${doc.id}')">🗑️ ELIMINAR</button>
+</div>`;
+});
+});
+
+function abrirAgregarClan(){abrirModal("modalClan")}
+
+async function guardarClan(){
+const nombre=document.getElementById("clanNombre").value.trim();
+const resultado=document.getElementById("clanResultado").value.trim();
+const fechaInput=document.getElementById("clanFecha").value;
+if(!nombre||!resultado||!fechaInput){alert("❌ Completa todos los campos.");return}
+const foto=await leerFoto(document.getElementById("clanFoto"));
+const fecha=new Date(fechaInput+"T12:00:00");
+await db.collection("clanes").add({
+nombre,resultado,fecha:fecha.toLocaleDateString("es-CO"),fechaISO:fechaInput,foto,creado:Date.now()
+});
+alert("✅ Victoria agregada.");
+cerrarModal("modalClan");
+document.getElementById("clanNombre").value="";
+document.getElementById("clanResultado").value="";
+document.getElementById("clanFecha").value="";
+document.getElementById("clanFoto").value="";
+document.getElementById("previewClan").style.display="none";
+}
+
+async function eliminarClan(id){
+if(confirm("¿Eliminar este clan derrotado?")){
+await db.collection("clanes").doc(id).delete();
+alert("🗑️ Clan eliminado.");
+}
+}
+
+</script>
+</body>
+</html>
