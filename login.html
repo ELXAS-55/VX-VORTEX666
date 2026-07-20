@@ -142,7 +142,7 @@ footer .fbrand{font-family:"Anton";color:var(--parchment);margin-bottom:6px;}
     <h2 style="margin-bottom:20px;">Panel Administrador</h2>
     <form class="fx" onsubmit="entrar(event)">
       <div><label class="lbl">Contraseña</label>
-        <input class="finput" type="password" id="clave" placeholder="....." required></div>
+        <input class="finput" type="password" id="clave" placeholder="" required></div>
       <div id="msgLogin" class="msg"></div>
       <button type="submit" class="btn btn-primary">INGRESAR</button>
     </form>
@@ -170,7 +170,7 @@ if(!window._fbInit){
 function entrar(e){
   e.preventDefault();
   const el=document.getElementById("msgLogin");
-  if(document.getElementById("clave").value==="VX666"){
+  if(document.getElementById("clave").value==="Edcr*12345"){
     location.href="admin.html";
   }else{
     el.textContent="❌ Contraseña incorrecta.";el.className="msg err";el.style.display="block";
