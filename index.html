@@ -125,7 +125,13 @@ form.fx{display:flex;flex-direction:column;gap:15px;}
 .stat-card p{margin-top:8px;font-size:1rem;color:var(--pdim);}
 footer{padding:36px 5vw;text-align:center;border-top:1px solid #2a1f1a;color:var(--pdim);font-size:.8rem;}
 footer .fbrand{font-family:"Anton";color:var(--parchment);margin-bottom:6px;}
-@media(max-width:700px){.nav-links{display:none;}.btn-block{font-size:.95rem;}}
+@media(max-width:700px){
+  nav{flex-direction:column;gap:12px;align-items:stretch;}
+  .nav-brand{justify-content:center;}
+  .nav-links{display:flex;justify-content:center;gap:10px 14px;width:100%;}
+  .nav-links a{font-size:.78rem;}
+  .btn-block{font-size:.95rem;}
+}
 </style>
 </head>
 <body>
@@ -164,7 +170,7 @@ footer .fbrand{font-family:"Anton";color:var(--parchment);margin-bottom:6px;}
     <a href="https://chat.whatsapp.com/G8HGqHyHtBr2Sxfw6jxYOL" target="_blank" class="btn btn-primary btn-block">📱 GRUPO WHATSAPP</a>
     <button class="btn btn-primary btn-block" id="abrirSolicitud">🎮 UNIRSE AL CLAN</button>
     <a href="estado.html" class="btn btn-ghost btn-block">📋 CONSULTAR SOLICITUD</a>
-    <a href="#" class="btn btn-ghost btn-block">🎵 TIKTOK OFICIAL</a>
+    <a href="https://tiktok.com/@clan_vx_vortex_666" target="_blank" rel="noopener noreferrer" class="btn btn-ghost btn-block">🎵 TIKTOK OFICIAL</a>
   </div>
 
   <!-- REGLAS -->
@@ -260,16 +266,33 @@ document.getElementById("fSolicitud").addEventListener("submit", async e => {
   }
 });
 
-// Stats
-async function cargarStats(){
-  try {
-    const vic = await window._db.collection("clanes").get();
-    const int = await window._db.collection("integrantes").get();
-    document.getElementById("cVictorias").textContent = vic.size;
-    document.getElementById("cIntegrantes").textContent = int.size;
-  } catch(e){}
-}
-cargarStats();
+// Stats: se actualizan automáticamente desde Firebase
+window._db.collection("clanes").onSnapshot(snap => {
+  document.getElementById("cVictorias").textContent = snap.size;
+});
+
+window._db.collection("integrantes").onSnapshot(snap => {
+  document.getElementById("cIntegrantes").textContent = snap.size;
+});
+
+window._db.collection("liderazgo").onSnapshot(snap => {
+  let decanos = 0;
+
+  snap.forEach(doc => {
+    const datos = doc.data() || {};
+    const cargo = String(datos.cargo || datos.rol || "")
+      .trim()
+      .toLowerCase();
+
+    if (cargo === "decano" || cargo === "decana") {
+      decanos++;
+    }
+  });
+
+  document.getElementById("cDecanos").textContent = decanos;
+}, error => {
+  console.error("Error cargando decanos:", error);
+});
 </script>
 </body>
 </html>
