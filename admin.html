@@ -5,9 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel Administrador | VX VORTEX⁶⁶⁶</title>
 <style>
-:root{--bg:#080808;--panel:#111;--ember:#ff6a00;--text:#fff;--dim:#aaa;--border:#292929}
+:root{--bg:#040711;--panel:#0a1020;--ember:#2f8fff;--text:#fff;--dim:#aaa;--border:rgba(47,143,255,.25)}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh;position:relative;}
+.space-bg{position:fixed;inset:0;z-index:-3;overflow:hidden;background:var(--bg);}
+.stars-layer{position:absolute;inset:-50%;width:200%;height:200%;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, #ffffff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 75% 15%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 50% 60%, #bcd9ff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 85% 75%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 10% 80%, #bcd9ff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 35% 45%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 60% 90%, #ffffff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 92% 40%, #bcd9ff 100%, transparent),
+    radial-gradient(1px 1px at 5% 55%, #ffffff 100%, transparent),
+    radial-gradient(2px 2px at 45% 12%, #ffffff 100%, transparent);
+  background-repeat:repeat;background-size:600px 600px;
+  animation:driftStars 140s linear infinite;}
+.stars-layer.layer2{background-size:900px 900px;opacity:.6;animation:driftStars2 200s linear infinite;}
+.stars-layer.layer3{background-size:350px 350px;opacity:.5;animation:twinkle 4s ease-in-out infinite alternate, driftStars 90s linear infinite reverse;}
+.nebula-glow{position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 20%, rgba(47,143,255,.16), transparent 45%),
+              radial-gradient(circle at 80% 70%, rgba(13,61,115,.32), transparent 50%);
+  animation:nebulaBreathe 10s ease-in-out infinite alternate;}
+@keyframes driftStars{from{transform:translate(0,0);}to{transform:translate(-600px,-300px);}}
+@keyframes driftStars2{from{transform:translate(0,0);}to{transform:translate(500px,-400px);}}
+@keyframes twinkle{0%{opacity:.25;}100%{opacity:.7;}}
+@keyframes nebulaBreathe{0%{opacity:.75;transform:scale(1);}100%{opacity:1;transform:scale(1.06);}}
+@media(prefers-reduced-motion:reduce){.stars-layer,.nebula-glow{animation:none!important;}}
+
 nav{display:flex;justify-content:space-between;align-items:center;padding:18px 5%;background:#0d0d0d;border-bottom:1px solid var(--border)}
 .nav-brand{color:white;text-decoration:none;font-weight:bold;font-size:1.1rem}
 .nav-links{display:flex;gap:20px}.nav-links a{color:#aaa;text-decoration:none;font-weight:bold}.nav-links a:hover{color:white}
@@ -19,7 +46,7 @@ section{margin-bottom:45px}.section-title{margin-bottom:18px;border-bottom:1px s
 button{border:0;border-radius:7px;padding:11px 16px;cursor:pointer;font-weight:bold;margin:5px 5px 0 0}
 .btn-green{background:#22c55e;color:#fff}.btn-red{background:#ef4444;color:#fff}.btn-orange{background:var(--ember);color:#000}.btn-gray{background:#333;color:#fff}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);justify-content:center;align-items:center;z-index:9999;padding:20px}
-.modal.show{display:flex}.modal-box{background:#111;border:2px solid var(--ember);border-radius:12px;padding:25px;width:520px;max-width:100%;max-height:90vh;overflow:auto;position:relative}
+.modal.show{display:flex}.modal-box{background:#0a1020;border:2px solid var(--ember);border-radius:12px;padding:25px;width:520px;max-width:100%;max-height:90vh;overflow:auto;position:relative}
 .close{position:absolute;right:16px;top:10px;background:none;color:#fff;font-size:28px}
 label{display:block;margin-top:12px;margin-bottom:5px;color:#bbb;font-size:.9rem}
 input,textarea,select{width:100%;padding:12px;background:#222;color:#fff;border:1px solid #444;border-radius:6px}
@@ -34,6 +61,12 @@ textarea{resize:vertical;min-height:90px}
 </style>
 </head>
 <body>
+<div class="space-bg">
+  <div class="stars-layer"></div>
+  <div class="stars-layer layer2"></div>
+  <div class="stars-layer layer3"></div>
+  <div class="nebula-glow"></div>
+</div>
 
 <nav>
 <a href="index.html" class="nav-brand">⚡ VX VORTEX⁶⁶⁶</a>
