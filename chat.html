@@ -4,10 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
 <title>Chat del Clan — VX VORTEX⁶⁶⁶</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2f8fff">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#040711;--panel:#0a1020;--panel2:#0d1730;--ember:#2f8fff;--blood:#0d3d73;--ash:#9a9ca3;--parchment:#ece4d8;--pdim:#b8aea0;--online:#2ee6a6;}
+:root{--bg:#040711;--panel:#0a1020;--panel2:#0d1730;--ember:#2f8fff;--blood:#0d3d73;--ash:#9a9ca3;--parchment:#ece4d8;--pdim:#b8aea0;--online:#2ee6a6;--leido:#00e5ff;}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--parchment);font-family:"Rajdhani",sans-serif;height:100vh;overflow:hidden;position:relative;}
 h1,h2,h3{font-family:"Anton",sans-serif;text-transform:uppercase;letter-spacing:.02em;}
@@ -56,8 +58,9 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 .hlogo{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--blood),var(--ember));display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
 .hinfo{flex:1;min-width:0;cursor:pointer;}
 .hname{font-family:"Anton";font-size:.95rem;letter-spacing:.03em;}
-.hsub{font-size:.72rem;color:var(--pdim);display:flex;align-items:center;gap:5px;}
-.hsub .dot{width:6px;height:6px;border-radius:50%;background:var(--online);box-shadow:0 0 5px var(--online);}
+.hsub{font-size:.72rem;color:var(--pdim);display:flex;align-items:center;gap:5px;min-height:15px;}
+.hsub .dot{width:6px;height:6px;border-radius:50%;background:var(--online);box-shadow:0 0 5px var(--online);flex-shrink:0;}
+#estadoEscribiendo{display:none;color:var(--ember);font-weight:600;}
 
 /* ---------- MIEMBROS ---------- */
 #drawer{position:absolute;top:0;right:-100%;width:80%;max-width:320px;height:100%;background:var(--panel2);z-index:40;transition:right .25s;padding:16px 14px;overflow-y:auto;border-left:1px solid rgba(47,143,255,.25);}
@@ -84,7 +87,10 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 .fila.yo .mSender{display:none;}
 .burbuja{padding:8px 11px;border-radius:14px;font-size:.9rem;line-height:1.4;background:var(--panel2);word-break:break-word;}
 .fila.yo .burbuja{background:var(--ember);color:#04101f;}
-.burbuja .hora{display:block;font-size:.62rem;opacity:.65;margin-top:2px;text-align:right;}
+.burbuja .pie{display:flex;justify-content:flex-end;align-items:center;gap:3px;margin-top:2px;}
+.burbuja .hora{font-size:.62rem;opacity:.65;}
+.checks{font-size:.72rem;letter-spacing:-2px;color:rgba(4,16,31,.55);}
+.checks.leido{color:var(--leido);text-shadow:0 0 3px rgba(0,0,0,.15);}
 .burbuja.sticker{background:transparent;padding:0;}
 .burbuja.sticker img{width:110px;height:110px;object-fit:contain;}
 .emoji-img{width:19px;height:19px;vertical-align:-4px;}
@@ -135,7 +141,12 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
     <div class="hlogo">⚡</div>
     <div class="hinfo" id="abrirMiembros">
       <div class="hname">CLAN VX VORTEX⁶⁶⁶</div>
-      <div class="hsub"><span class="dot"></span><span id="numActivos">0 activos</span> · <span id="numTotal">0 miembros</span></div>
+      <div class="hsub">
+        <span id="estadoNormal" style="display:flex;align-items:center;gap:5px;">
+          <span class="dot"></span><span id="numActivos">0 activos</span> · <span id="numTotal">0 miembros</span>
+        </span>
+        <span id="estadoEscribiendo"></span>
+      </div>
     </div>
   </header>
 
@@ -184,6 +195,11 @@ if(!window._fbInit){
   window._fbInit = true;
 }
 const db = window._db;
+
+/* -------- service worker (para instalar como app y notificar de fondo) -------- */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
 
 /* -------- comprimir imagen a base64 (igual que el resto de la web) -------- */
 function comprimir(file, maxKB, maxSize){
@@ -243,15 +259,31 @@ document.getElementById('btnEntrar').onclick = async ()=>{
   iniciarChat();
 };
 
+/* -------- presencia (activo/desconectado) -------- */
 function iniciarPresencia(){
   const marcar = ()=> db.collection('chatUsuarios').doc(miUid).set({
-    ultimaVez: firebase.firestore.FieldValue.serverTimestamp()
+    ultimaVez: firebase.firestore.FieldValue.serverTimestamp(), offline:false
   }, {merge:true});
   marcar();
   setInterval(marcar, 20000);
   window.addEventListener('beforeunload', ()=>{
-    navigator.sendBeacon && db.collection('chatUsuarios').doc(miUid).set({offline:true},{merge:true});
+    db.collection('chatUsuarios').doc(miUid).set({offline:true},{merge:true});
   });
+}
+
+/* -------- marcar como leído (para los check azules) -------- */
+function marcarLectura(){
+  if(document.visibilityState === 'visible'){
+    db.collection('chatUsuarios').doc(miUid).set({
+      ultimaLectura: firebase.firestore.FieldValue.serverTimestamp()
+    }, {merge:true});
+  }
+}
+function iniciarLectura(){
+  marcarLectura();
+  setInterval(marcarLectura, 5000);
+  document.addEventListener('visibilitychange', marcarLectura);
+  window.addEventListener('focus', marcarLectura);
 }
 
 /* -------- miembros + activos -------- */
@@ -262,6 +294,7 @@ function iniciarMiembros(){
     snap.forEach(d=> miembrosCache[d.id] = d.data());
     document.getElementById('numTotal').textContent = snap.size + ' miembros';
     pintarMiembros();
+    pintarChecks();
   });
   setInterval(pintarMiembros, 10000);
 }
@@ -321,24 +354,97 @@ document.getElementById('btnSticker').onclick = ()=>{
   document.getElementById('panelSticker').classList.toggle('show');
 };
 
+/* -------- "escribiendo..." -------- */
+let typingTimeout;
+document.getElementById('texto').addEventListener('input', ()=>{
+  db.collection('chatEscribiendo').doc(miUid).set({nombre:miNombre, ts:firebase.firestore.FieldValue.serverTimestamp()});
+  clearTimeout(typingTimeout);
+  typingTimeout = setTimeout(()=> db.collection('chatEscribiendo').doc(miUid).delete().catch(()=>{}), 3000);
+});
+function iniciarEscribiendo(){
+  db.collection('chatEscribiendo').onSnapshot(snap=>{
+    const ahora = Date.now();
+    const otros = [];
+    snap.forEach(d=>{
+      if(d.id === miUid) return;
+      const t = d.data();
+      const ms = t.ts && t.ts.toMillis ? t.ts.toMillis() : 0;
+      if(ahora - ms < 4000) otros.push(t.nombre || 'Alguien');
+    });
+    const normal = document.getElementById('estadoNormal');
+    const escribiendo = document.getElementById('estadoEscribiendo');
+    if(otros.length){
+      normal.style.display = 'none';
+      escribiendo.style.display = 'block';
+      escribiendo.textContent = otros.length === 1
+        ? `${otros[0]} está escribiendo...`
+        : `${otros.length} personas están escribiendo...`;
+    } else {
+      normal.style.display = 'flex';
+      escribiendo.style.display = 'none';
+    }
+  });
+}
+
+/* -------- notificaciones (mientras el chat está abierto de fondo / instalado) -------- */
+let primeraCargaMensajes = true;
+function pedirNotificaciones(){
+  if('Notification' in window && Notification.permission === 'default'){
+    Notification.requestPermission();
+  }
+}
+function mostrarNotificacion(m){
+  if(!('Notification' in window) || Notification.permission !== 'granted') return;
+  const cuerpo = m.tipo === 'sticker' ? '📷 Envió un sticker' : (m.texto || '');
+  const opciones = {body: cuerpo, icon: 'icon-192.png', tag: 'vx-chat'};
+  if(navigator.serviceWorker && navigator.serviceWorker.ready){
+    navigator.serviceWorker.ready.then(reg=> reg.showNotification(m.nombre || 'Nuevo mensaje', opciones)).catch(()=>{
+      try{ new Notification(m.nombre || 'Nuevo mensaje', opciones); }catch(e){}
+    });
+  } else {
+    try{ new Notification(m.nombre || 'Nuevo mensaje', opciones); }catch(e){}
+  }
+}
+
+/* -------- checks de leído en mis propios mensajes -------- */
+let ultimosMensajes = [];
+function pintarChecks(){
+  ultimosMensajes.forEach(m=>{
+    const el = document.getElementById('check-'+m.id);
+    if(!el) return;
+    const leido = Object.entries(miembrosCache).some(([uid, mem])=>{
+      if(uid === miUid) return false;
+      const lecMs = mem.ultimaLectura && mem.ultimaLectura.toMillis ? mem.ultimaLectura.toMillis() : 0;
+      const msjMs = m.fecha && m.fecha.toMillis ? m.fecha.toMillis() : 0;
+      return lecMs > msjMs;
+    });
+    el.textContent = '✓✓';
+    el.classList.toggle('leido', leido);
+    if(!leido) el.textContent = '✓';
+  });
+}
+
 /* -------- mensajes -------- */
 function iniciarMensajes(){
   db.collection('chatMensajes').orderBy('fecha','asc').limit(200).onSnapshot(snap=>{
     const box = document.getElementById('mensajes');
     box.innerHTML = '';
+    ultimosMensajes = [];
     snap.forEach(doc=>{
       const m = doc.data();
+      ultimosMensajes.push({id:doc.id, ...m});
       const esMio = m.uid === miUid;
       const fila = document.createElement('div');
       fila.className = 'fila' + (esMio?' yo':'');
       const foto = (miembrosCache[m.uid] && miembrosCache[m.uid].foto) || m.foto || '';
       const inicial = (m.nombre||'?').charAt(0).toUpperCase();
       const hora = m.fecha && m.fecha.toDate ? m.fecha.toDate().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) : '';
+      const checks = esMio ? `<span class="checks" id="check-${doc.id}">✓</span>` : '';
       let burbuja = '';
       if(m.tipo === 'sticker'){
-        burbuja = `<div class="burbuja sticker"><img src="${m.stickerURL}"></div>`;
+        burbuja = `<div class="burbuja sticker"><img src="${m.stickerURL}"><div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
       } else {
-        burbuja = `<div class="burbuja">${renderTexto(m.texto||'')}<span class="hora">${hora}</span></div>`;
+        burbuja = `<div class="burbuja">${renderTexto(m.texto||'')}<div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
       }
       fila.innerHTML = `
         <div class="mAvatar">${foto?`<img src="${foto}">`:inicial}</div>
@@ -346,6 +452,20 @@ function iniciarMensajes(){
       box.appendChild(fila);
     });
     box.scrollTop = box.scrollHeight;
+    pintarChecks();
+    marcarLectura();
+
+    if(!primeraCargaMensajes){
+      snap.docChanges().forEach(change=>{
+        if(change.type === 'added'){
+          const m = change.doc.data();
+          if(m.uid !== miUid && document.visibilityState !== 'visible'){
+            mostrarNotificacion(m);
+          }
+        }
+      });
+    }
+    primeraCargaMensajes = false;
   });
 }
 
@@ -358,6 +478,7 @@ async function enviarMensaje(){
   const texto = input.value.trim();
   if(!texto) return;
   input.value = '';
+  db.collection('chatEscribiendo').doc(miUid).delete().catch(()=>{});
   await db.collection('chatMensajes').add({
     uid: miUid, nombre: miNombre, foto: miFoto || null,
     tipo: 'texto', texto, fecha: firebase.firestore.FieldValue.serverTimestamp()
@@ -393,10 +514,13 @@ function iniciarStickers(){
 }
 
 function iniciarChat(){
+  pedirNotificaciones();
   iniciarPresencia();
+  iniciarLectura();
   iniciarMiembros();
   iniciarMensajes();
   iniciarStickers();
+  iniciarEscribiendo();
 }
 
 /* si ya entró antes en este dispositivo, saltar la pantalla de entrada */
