@@ -39,10 +39,11 @@ a{color:inherit;text-decoration:none;}
 .app{max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;position:relative;background:rgba(4,7,17,.4);}
 
 /* ---------- ENTRADA ---------- */
-#entrada{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px 26px;background:var(--bg);}
+#entrada{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px 26px;background:var(--bg);text-align:center;}
 #entrada .brand-ico{font-size:2.3rem;}
-#entrada h1{font-size:1.4rem;text-align:center;}
-#entrada p{color:var(--pdim);font-size:.85rem;text-align:center;margin-top:-8px;}
+#entrada h1{font-size:1.4rem;}
+#entrada p{color:var(--pdim);font-size:.85rem;margin-top:-8px;}
+#formEntrada,#esperandoBox,#rechazadoBox{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;}
 .finput{width:100%;background:#0d0a09;border:1px solid rgba(47,143,255,.3);color:var(--parchment);padding:13px 14px;font-family:"Rajdhani";font-size:.97rem;border-radius:4px;}
 .finput:focus{border-color:var(--ember);outline:none;}
 .upload-box{border:1.5px dashed var(--ember);border-radius:50%;width:90px;height:90px;display:flex;align-items:center;justify-content:center;color:var(--pdim);font-size:.7rem;text-align:center;cursor:pointer;overflow:hidden;background:#0d0a09;}
@@ -50,8 +51,10 @@ a{color:inherit;text-decoration:none;}
 .upload-box input{display:none;}
 .btn-primary{width:100%;padding:14px 0;border:none;border-radius:4px;background:var(--ember);color:#04101f;font-family:"Anton";letter-spacing:.05em;font-size:1rem;cursor:pointer;}
 .btn-primary:active{transform:translateY(1px);}
-.msg{padding:10px 13px;border-radius:3px;font-size:.83rem;font-weight:600;display:none;text-align:center;}
+.msg{padding:10px 13px;border-radius:3px;font-size:.83rem;font-weight:600;display:none;text-align:center;width:100%;}
 .msg.err{background:rgba(200,50,50,.12);border:1px solid rgba(200,50,50,.35);color:#da5f5f;display:block;}
+.spinner{font-size:2rem;animation:girar 1.4s linear infinite;}
+@keyframes girar{to{transform:rotate(360deg);}}
 
 /* ---------- HEADER ---------- */
 header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--panel2);border-bottom:1px solid rgba(47,143,255,.25);z-index:5;}
@@ -62,13 +65,23 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 .hsub{font-size:.72rem;color:var(--pdim);display:flex;align-items:center;gap:5px;min-height:15px;}
 .hsub .dot{width:6px;height:6px;border-radius:50%;background:var(--online);box-shadow:0 0 5px var(--online);flex-shrink:0;}
 #estadoEscribiendo{display:none;color:var(--ember);font-weight:600;}
+.ibtn{font-size:1.35rem;cursor:pointer;color:var(--pdim);padding:5px;flex-shrink:0;}
 
-/* ---------- MIEMBROS ---------- */
-#drawer{position:absolute;top:0;right:-100%;width:80%;max-width:320px;height:100%;background:var(--panel2);z-index:40;transition:right .25s;padding:16px 14px;overflow-y:auto;border-left:1px solid rgba(47,143,255,.25);}
+/* ---------- MIEMBROS / SOLICITUDES ---------- */
+#drawer{position:absolute;top:0;right:-100%;width:84%;max-width:330px;height:100%;background:var(--panel2);z-index:40;transition:right .25s;padding:16px 14px;overflow-y:auto;border-left:1px solid rgba(47,143,255,.25);}
 #drawer.open{right:0;}
 #overlay{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:39;display:none;}
 #overlay.show{display:block;}
-.drawerTitle{font-family:"Anton";font-size:.95rem;margin-bottom:12px;}
+.drawerTitle{font-family:"Anton";font-size:.9rem;margin:14px 0 10px;}
+.drawerTitle:first-child{margin-top:0;}
+.btnInvitar{width:100%;padding:10px 0;border:none;border-radius:4px;background:rgba(47,143,255,.15);color:var(--ember);font-family:"Rajdhani";font-weight:700;font-size:.83rem;cursor:pointer;}
+.solRow{display:flex;align-items:center;gap:10px;padding:8px 2px;}
+.solInfo{flex:1;min-width:0;}
+.solNombre{font-size:.85rem;font-weight:600;}
+.solBtns{display:flex;gap:5px;}
+.solBtns button{border:none;border-radius:4px;padding:6px 9px;font-size:.7rem;font-weight:700;cursor:pointer;}
+.btnAprobar{background:rgba(50,200,100,.18);color:#5fda8f;}
+.btnRechazar{background:rgba(200,50,50,.18);color:#da5f5f;}
 .memberRow{display:flex;align-items:center;gap:10px;padding:8px 2px;}
 .memberAvatar{position:relative;width:38px;height:38px;border-radius:50%;overflow:hidden;background:var(--panel);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:"Anton";}
 .memberAvatar img{width:100%;height:100%;object-fit:cover;}
@@ -76,11 +89,13 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 .statusDot.on{background:var(--online);box-shadow:0 0 4px var(--online);}
 .memberName{font-size:.87rem;font-weight:600;}
 .memberStatus{font-size:.7rem;color:var(--pdim);}
+.btnKick{margin-left:auto;background:rgba(200,50,50,.15);color:#da5f5f;border:none;border-radius:4px;padding:6px 10px;font-size:.72rem;font-weight:700;cursor:pointer;}
 
 /* ---------- MENSAJES ---------- */
 #mensajes{flex:1;overflow-y:auto;padding:14px 10px;display:flex;flex-direction:column;gap:2px;}
 .fila{display:flex;gap:7px;max-width:84%;margin-bottom:5px;}
 .fila.yo{align-self:flex-end;flex-direction:row-reverse;}
+.fila.seleccionada .burbuja{outline:2px solid var(--ember);outline-offset:2px;}
 .mAvatar{width:26px;height:26px;border-radius:50%;overflow:hidden;flex-shrink:0;align-self:flex-end;background:var(--panel);}
 .mAvatar img{width:100%;height:100%;object-fit:cover;}
 .mCol{display:flex;flex-direction:column;gap:2px;}
@@ -94,7 +109,15 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 .checks.leido{color:var(--leido);text-shadow:0 0 3px rgba(0,0,0,.15);}
 .burbuja.sticker{background:transparent;padding:0;}
 .burbuja.sticker img{width:110px;height:110px;object-fit:contain;}
+.burbuja.foto{padding:4px;}
+.burbuja.foto img{width:180px;max-width:56vw;border-radius:10px;display:block;}
 .emoji-img{width:19px;height:19px;vertical-align:-4px;}
+
+/* ---------- BARRA DE SELECCIÓN ---------- */
+#barraSeleccion{position:absolute;left:0;right:0;bottom:60px;background:var(--panel2);display:none;align-items:center;justify-content:space-between;padding:10px 14px;z-index:31;border-top:1px solid rgba(47,143,255,.25);}
+#barraSeleccion.show{display:flex;}
+#barraSeleccion span{font-size:.85rem;font-weight:600;}
+#barraSeleccion .acciones{display:flex;gap:14px;font-size:1.2rem;}
 
 /* ---------- PANEL EMOJI / STICKER ---------- */
 #panelEmoji,#panelSticker{position:absolute;bottom:60px;left:0;right:0;height:210px;background:var(--panel2);border-top:1px solid rgba(47,143,255,.25);z-index:30;display:none;}
@@ -110,8 +133,7 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 .addSticker input{display:none;}
 
 /* ---------- BARRA DE ENTRADA ---------- */
-#barra{display:flex;align-items:flex-end;gap:6px;padding:9px 9px;background:var(--panel2);border-top:1px solid rgba(47,143,255,.25);}
-.ibtn{font-size:1.35rem;cursor:pointer;color:var(--pdim);padding:5px;flex-shrink:0;}
+#barra{display:flex;align-items:flex-end;gap:5px;padding:9px 7px;background:var(--panel2);border-top:1px solid rgba(47,143,255,.25);}
 #texto{flex:1;background:var(--panel);border:1px solid rgba(47,143,255,.25);color:var(--parchment);border-radius:18px;padding:9px 13px;font-size:.9rem;outline:none;max-height:90px;resize:none;font-family:"Rajdhani";}
 #texto:focus{border-color:var(--ember);}
 #enviar{width:38px;height:38px;border-radius:50%;border:none;background:var(--ember);color:#04101f;font-size:1.05rem;cursor:pointer;flex-shrink:0;}
@@ -128,12 +150,27 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
   <!-- ENTRADA -->
   <div id="entrada">
     <div class="brand-ico">⚡</div>
-    <h1>Chat VX VORTEX⁶⁶⁶</h1>
-    <p>Escribe tu nombre de juego y sube tu foto para entrar.</p>
-    <label class="upload-box" id="uploadBox">📷<input type="file" id="fotoInput" accept="image/*"></label>
-    <input class="finput" id="nombreInput" placeholder="Tu nombre en el juego" maxlength="24">
-    <div id="msgEntrada" class="msg err"></div>
-    <button class="btn-primary" id="btnEntrar">ENTRAR AL CHAT</button>
+
+    <div id="formEntrada">
+      <h1>Chat VX VORTEX⁶⁶⁶</h1>
+      <p>Escribe tu nombre de juego y sube tu foto para pedir entrar.</p>
+      <label class="upload-box" id="uploadBox">📷<input type="file" id="fotoInput" accept="image/*"></label>
+      <input class="finput" id="nombreInput" placeholder="Tu nombre en el juego" maxlength="24">
+      <div id="msgEntrada" class="msg err"></div>
+      <button class="btn-primary" id="btnEntrar">PEDIR ENTRAR</button>
+    </div>
+
+    <div id="esperandoBox" style="display:none;">
+      <div class="spinner">⏳</div>
+      <h1>Solicitud enviada</h1>
+      <p>Espera a que el administrador del clan apruebe tu ingreso al chat. Esta pantalla se actualiza sola.</p>
+    </div>
+
+    <div id="rechazadoBox" style="display:none;">
+      <h1>Solicitud rechazada</h1>
+      <p>El administrador no aprobó tu ingreso al chat.</p>
+      <button class="btn-primary" id="btnReintentar">INTENTAR DE NUEVO</button>
+    </div>
   </div>
 
   <!-- HEADER -->
@@ -149,11 +186,19 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
         <span id="estadoEscribiendo"></span>
       </div>
     </div>
-    <div class="ibtn" id="btnAdmin" title="Modo administrador">🔑</div>
   </header>
 
   <!-- MENSAJES -->
   <div id="mensajes"></div>
+
+  <!-- BARRA DE SELECCIÓN -->
+  <div id="barraSeleccion">
+    <span>1 mensaje seleccionado</span>
+    <div class="acciones">
+      <span id="btnBorrarSel">🗑️</span>
+      <span id="btnCancelarSel">✕</span>
+    </div>
+  </div>
 
   <!-- EMOJIS -->
   <div id="panelEmoji"><div class="gridEmoji" id="gridEmoji"></div></div>
@@ -168,17 +213,25 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
   <!-- BARRA -->
   <div id="barra">
     <div class="ibtn" id="btnEmoji">😀</div>
+    <div class="ibtn" id="btnFoto">📸</div>
     <div class="ibtn" id="btnSticker">🖼️</div>
     <textarea id="texto" rows="1" placeholder="Escribe un mensaje..."></textarea>
     <button id="enviar">➤</button>
+    <input type="file" id="fotoMsjInput" accept="image/*" style="display:none">
   </div>
 </div>
 
-<!-- MIEMBROS -->
+<!-- MIEMBROS / SOLICITUDES -->
 <div id="overlay"></div>
 <div id="drawer">
+  <button class="btnInvitar" id="btnInvitar">🔗 Compartir invitación al chat</button>
+
+  <div id="seccionSolicitudes" style="display:none;">
+    <div class="drawerTitle">Solicitudes pendientes</div>
+    <div id="listaSolicitudes"></div>
+  </div>
+
   <div class="drawerTitle">Miembros del clan</div>
-  <button id="btnVaciar" style="display:none;width:100%;padding:10px 0;margin-bottom:14px;border:none;border-radius:4px;background:rgba(200,50,50,.15);color:#da5f5f;font-family:'Rajdhani';font-weight:700;font-size:.85rem;cursor:pointer;">🗑️ Vaciar todo el chat</button>
   <div id="listaMiembros"></div>
 </div>
 
@@ -226,6 +279,7 @@ function comprimir(file, maxKB, maxSize){
     r.readAsDataURL(file);
   });
 }
+function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
 
 /* -------- identidad guardada en este dispositivo -------- */
 function uidGen(){return 'u'+Date.now()+Math.random().toString(36).slice(2,8);}
@@ -233,38 +287,9 @@ let miUid = localStorage.getItem('vxChatUid');
 if(!miUid){ miUid = uidGen(); localStorage.setItem('vxChatUid', miUid); }
 let miNombre = localStorage.getItem('vxChatNombre') || '';
 let miFoto = localStorage.getItem('vxChatFoto') || '';
+let miEstado = localStorage.getItem('vxChatEstado') || ''; // 'aprobado' | 'pendiente' | ''
 let fotoTemp = null;
-let soyAdmin = localStorage.getItem('vxChatAdmin') === '1';
-const CLAVE_ADMIN = 'Edcr*12345';
-
-function actualizarUIAdmin(){
-  document.getElementById('miCorona').style.display = soyAdmin ? 'inline' : 'none';
-  document.getElementById('btnVaciar').style.display = soyAdmin ? 'block' : 'none';
-}
-document.getElementById('btnAdmin').onclick = ()=>{
-  if(soyAdmin){ alert('Ya eres administrador de este chat.'); return; }
-  const clave = prompt('Clave de administrador del clan:');
-  if(clave === null) return;
-  if(clave === CLAVE_ADMIN){
-    soyAdmin = true;
-    localStorage.setItem('vxChatAdmin','1');
-    db.collection('chatUsuarios').doc(miUid).set({isAdmin:true},{merge:true});
-    actualizarUIAdmin();
-    pintarMiembros();
-    alert('✅ Ahora eres administrador del chat.');
-  } else {
-    alert('❌ Clave incorrecta.');
-  }
-};
-document.getElementById('btnVaciar').onclick = async ()=>{
-  if(!soyAdmin) return;
-  if(!confirm('¿Borrar TODOS los mensajes del chat para todos? Esto no se puede deshacer.')) return;
-  const snap = await db.collection('chatMensajes').get();
-  const borrados = snap.docs.map(d=> d.ref.delete());
-  await Promise.all(borrados);
-  document.getElementById('drawer').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
-};
+let soyAdmin = false;
 
 document.getElementById('uploadBox').onclick = ()=> document.getElementById('fotoInput').click();
 document.getElementById('fotoInput').onchange = async (e)=>{
@@ -272,12 +297,15 @@ document.getElementById('fotoInput').onchange = async (e)=>{
   fotoTemp = await comprimir(file, 80, 300);
   document.getElementById('uploadBox').innerHTML = `<img src="${fotoTemp}">`;
 };
+if(miNombre) document.getElementById('nombreInput').value = miNombre;
 
-if(miNombre){
-  document.getElementById('nombreInput').value = miNombre;
-  if(miFoto) document.getElementById('uploadBox').innerHTML = `<img src="${miFoto}">`;
+function mostrarPantalla(id){
+  ['formEntrada','esperandoBox','rechazadoBox'].forEach(x=>{
+    document.getElementById(x).style.display = (x===id) ? 'flex' : 'none';
+  });
 }
 
+/* -------- pedir entrar / crear el clan como admin -------- */
 document.getElementById('btnEntrar').onclick = async ()=>{
   const nombre = document.getElementById('nombreInput').value.trim();
   const el = document.getElementById('msgEntrada');
@@ -286,14 +314,71 @@ document.getElementById('btnEntrar').onclick = async ()=>{
   if(fotoTemp) miFoto = fotoTemp;
   localStorage.setItem('vxChatNombre', miNombre);
   if(miFoto) localStorage.setItem('vxChatFoto', miFoto);
-  await db.collection('chatUsuarios').doc(miUid).set({
-    nombre: miNombre, foto: miFoto || null, isAdmin: soyAdmin, ultimaVez: firebase.firestore.FieldValue.serverTimestamp()
-  }, {merge:true});
-  document.getElementById('entrada').style.display='none';
-  iniciarChat();
+
+  const configRef = db.collection('chatConfig').doc('principal');
+  const configSnap = await configRef.get();
+
+  if(!configSnap.exists){
+    // Nadie ha creado el chat todavía: intento ser el admin creador
+    try{
+      await db.runTransaction(async (t)=>{
+        const doc = await t.get(configRef);
+        if(doc.exists) throw new Error('ya-existe');
+        t.set(configRef, {adminUid: miUid, creadoEn: firebase.firestore.FieldValue.serverTimestamp()});
+        t.set(db.collection('chatUsuarios').doc(miUid), {
+          nombre: miNombre, foto: miFoto || null, isAdmin: true,
+          ultimaVez: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      });
+      localStorage.setItem('vxChatEstado','aprobado');
+      document.getElementById('entrada').style.display='none';
+      iniciarChat();
+      return;
+    }catch(e){ /* alguien más se adelantó como creador, sigo como solicitante */ }
+  }
+
+  // Ya existe admin: mando solicitud de ingreso
+  await db.collection('chatSolicitudes').doc(miUid).set({
+    nombre: miNombre, foto: miFoto || null, fecha: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  localStorage.setItem('vxChatEstado','pendiente');
+  mostrarPantalla('esperandoBox');
+  escucharAprobacion();
 };
 
-/* -------- presencia (activo/desconectado) -------- */
+document.getElementById('btnReintentar').onclick = ()=>{
+  localStorage.removeItem('vxChatEstado');
+  localStorage.removeItem('vxChatUid');
+  location.reload();
+};
+
+function escucharAprobacion(){
+  db.collection('chatUsuarios').doc(miUid).onSnapshot(doc=>{
+    if(doc.exists){
+      localStorage.setItem('vxChatEstado','aprobado');
+      location.reload();
+    }
+  });
+  db.collection('chatSolicitudes').doc(miUid).onSnapshot(async doc=>{
+    if(!doc.exists){
+      const yaMiembro = await db.collection('chatUsuarios').doc(miUid).get();
+      if(!yaMiembro.exists){
+        mostrarPantalla('rechazadoBox');
+      }
+    }
+  });
+}
+
+/* si ya está aprobado en este dispositivo, entra directo */
+if(miEstado === 'aprobado'){
+  document.getElementById('entrada').style.display='none';
+  iniciarChat();
+} else if(miEstado === 'pendiente'){
+  mostrarPantalla('esperandoBox');
+  escucharAprobacion();
+}
+
+/* -------- presencia -------- */
 function iniciarPresencia(){
   const marcar = ()=> db.collection('chatUsuarios').doc(miUid).set({
     ultimaVez: firebase.firestore.FieldValue.serverTimestamp(), offline:false
@@ -305,7 +390,7 @@ function iniciarPresencia(){
   });
 }
 
-/* -------- marcar como leído (para los check azules) -------- */
+/* -------- marcar como leído -------- */
 function marcarLectura(){
   if(document.visibilityState === 'visible'){
     db.collection('chatUsuarios').doc(miUid).set({
@@ -320,17 +405,74 @@ function iniciarLectura(){
   window.addEventListener('focus', marcarLectura);
 }
 
-/* -------- miembros + activos -------- */
+/* -------- invitar por enlace -------- */
+document.getElementById('btnInvitar').onclick = ()=>{
+  const url = location.href.split('?')[0];
+  if(navigator.share){
+    navigator.share({title:'Únete al chat de VX VORTEX⁶⁶⁶', url}).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=> alert('Enlace copiado:\n'+url));
+  } else {
+    prompt('Copia este enlace para invitar:', url);
+  }
+};
+
+/* -------- miembros + solicitudes (solo si soy admin) -------- */
 let miembrosCache = {};
+let expulsionDetectada = false;
 function iniciarMiembros(){
   db.collection('chatUsuarios').onSnapshot(snap=>{
     miembrosCache = {};
     snap.forEach(d=> miembrosCache[d.id] = d.data());
     document.getElementById('numTotal').textContent = snap.size + ' miembros';
+
+    if(!miembrosCache[miUid] && !expulsionDetectada){
+      expulsionDetectada = true;
+      localStorage.removeItem('vxChatEstado');
+      localStorage.removeItem('vxChatUid');
+      alert('Has sido eliminado del chat por el administrador.');
+      location.reload();
+      return;
+    }
+
+    soyAdmin = !!(miembrosCache[miUid] && miembrosCache[miUid].isAdmin);
+    document.getElementById('miCorona').style.display = soyAdmin ? 'inline' : 'none';
+    document.getElementById('seccionSolicitudes').style.display = soyAdmin ? 'block' : 'none';
+
     pintarMiembros();
     pintarChecks();
   });
   setInterval(pintarMiembros, 10000);
+
+  db.collection('chatSolicitudes').onSnapshot(snap=>{
+    const lista = document.getElementById('listaSolicitudes');
+    lista.innerHTML = '';
+    snap.forEach(doc=>{
+      const s = doc.data();
+      const uid = doc.id;
+      const inicial = (s.nombre||'?').charAt(0).toUpperCase();
+      const row = document.createElement('div');
+      row.className = 'solRow';
+      row.innerHTML = `
+        <div class="memberAvatar">${s.foto?`<img src="${s.foto}">`:inicial}</div>
+        <div class="solInfo"><div class="solNombre">${escapeHtml(s.nombre||'Sin nombre')}</div></div>
+        <div class="solBtns">
+          <button class="btnAprobar">Aprobar</button>
+          <button class="btnRechazar">Rechazar</button>
+        </div>`;
+      row.querySelector('.btnAprobar').onclick = async ()=>{
+        await db.collection('chatUsuarios').doc(uid).set({
+          nombre: s.nombre||'Miembro', foto: s.foto||null, isAdmin:false,
+          ultimaVez: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        await db.collection('chatSolicitudes').doc(uid).delete();
+      };
+      row.querySelector('.btnRechazar').onclick = async ()=>{
+        await db.collection('chatSolicitudes').doc(uid).delete();
+      };
+      lista.appendChild(row);
+    });
+  });
 }
 function pintarMiembros(){
   const cont = document.getElementById('listaMiembros');
@@ -345,23 +487,19 @@ function pintarMiembros(){
     row.className = 'memberRow';
     const inicial = (m.nombre||'?').charAt(0).toUpperCase();
     const corona = m.isAdmin ? ' 👑' : '';
-    const btnKick = (soyAdmin && uid !== miUid)
-      ? `<button data-kick="${uid}" style="margin-left:auto;background:rgba(200,50,50,.15);color:#da5f5f;border:none;border-radius:4px;padding:6px 10px;font-size:.72rem;font-weight:700;cursor:pointer;">Eliminar</button>`
-      : '';
+    const btnKick = (soyAdmin && uid !== miUid) ? `<button class="btnKick">Eliminar</button>` : '';
     row.innerHTML = `
       <div class="memberAvatar">${m.foto?`<img src="${m.foto}">`:inicial}<div class="statusDot ${enLinea?'on':''}"></div></div>
       <div><div class="memberName">${escapeHtml(m.nombre||'Miembro')}${corona}</div><div class="memberStatus">${enLinea?'En línea':'Desconectado'}</div></div>
       ${btnKick}`;
-    cont.appendChild(row);
-    if(soyAdmin && uid !== miUid){
-      row.style.display = 'flex';
-      row.style.alignItems = 'center';
-      row.querySelector('[data-kick]').onclick = async ()=>{
+    if(btnKick){
+      row.querySelector('.btnKick').onclick = async ()=>{
         if(confirm(`¿Quitar a ${m.nombre||'este miembro'} del chat?`)){
           await db.collection('chatUsuarios').doc(uid).delete();
         }
       };
     }
+    cont.appendChild(row);
   });
   document.getElementById('numActivos').textContent = activos + ' activos';
 }
@@ -373,8 +511,6 @@ document.getElementById('overlay').onclick = ()=>{
   document.getElementById('drawer').classList.remove('open');
   document.getElementById('overlay').classList.remove('show');
 };
-
-function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
 
 /* -------- emojis estilo iPhone (se ven igual en Android) -------- */
 const EMOJIS = ['😀','😂','🤣','😍','😎','🥳','😭','😡','🤔','😏','👍','👎','🙏','💪','🔥','⚡','💀','👑','🎮','🏆','🚀','💯','❤️','🧠','😱','🥶','🤝','👀','🎯','🕹️','😅','🙌'];
@@ -392,7 +528,6 @@ function renderTexto(texto){
   const escapado = escapeHtml(texto);
   return escapado.replace(/\p{Extended_Pictographic}/gu, m => emojiImg(m, 19));
 }
-
 document.getElementById('btnEmoji').onclick = ()=>{
   document.getElementById('panelSticker').classList.remove('show');
   document.getElementById('panelEmoji').classList.toggle('show');
@@ -424,9 +559,7 @@ function iniciarEscribiendo(){
     if(otros.length){
       normal.style.display = 'none';
       escribiendo.style.display = 'block';
-      escribiendo.textContent = otros.length === 1
-        ? `${otros[0]} está escribiendo...`
-        : `${otros.length} personas están escribiendo...`;
+      escribiendo.textContent = otros.length === 1 ? `${otros[0]} está escribiendo...` : `${otros.length} personas están escribiendo...`;
     } else {
       normal.style.display = 'flex';
       escribiendo.style.display = 'none';
@@ -434,16 +567,16 @@ function iniciarEscribiendo(){
   });
 }
 
-/* -------- notificaciones (mientras el chat está abierto de fondo / instalado) -------- */
+/* -------- notificaciones -------- */
 let primeraCargaMensajes = true;
 function pedirNotificaciones(){
-  if('Notification' in window && Notification.permission === 'default'){
-    Notification.requestPermission();
-  }
+  if('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
 }
 function mostrarNotificacion(m){
   if(!('Notification' in window) || Notification.permission !== 'granted') return;
-  const cuerpo = m.tipo === 'sticker' ? '📷 Envió un sticker' : (m.texto || '');
+  let cuerpo = m.texto || '';
+  if(m.tipo === 'sticker') cuerpo = '📷 Envió un sticker';
+  if(m.tipo === 'foto') cuerpo = '📷 Envió una foto';
   const opciones = {body: cuerpo, icon: 'icon-192.png', tag: 'vx-chat'};
   if(navigator.serviceWorker && navigator.serviceWorker.ready){
     navigator.serviceWorker.ready.then(reg=> reg.showNotification(m.nombre || 'Nuevo mensaje', opciones)).catch(()=>{
@@ -454,7 +587,7 @@ function mostrarNotificacion(m){
   }
 }
 
-/* -------- checks de leído en mis propios mensajes -------- */
+/* -------- checks de leído -------- */
 let ultimosMensajes = [];
 function pintarChecks(){
   ultimosMensajes.forEach(m=>{
@@ -466,22 +599,36 @@ function pintarChecks(){
       const msjMs = m.fecha && m.fecha.toMillis ? m.fecha.toMillis() : 0;
       return lecMs > msjMs;
     });
-    el.textContent = '✓✓';
+    el.textContent = leido ? '✓✓' : '✓';
     el.classList.toggle('leido', leido);
-    if(!leido) el.textContent = '✓';
   });
 }
 
-/* -------- borrar mensajes (toque largo) -------- */
-function confirmarBorrarMensaje(id, esMio){
+/* -------- seleccionar y borrar un mensaje -------- */
+let seleccion = null; // {id, fila}
+function seleccionarMensaje(id, esMio, fila){
   if(!esMio && !soyAdmin) return;
-  if(confirm('¿Eliminar este mensaje?')){
-    db.collection('chatMensajes').doc(id).delete().catch(()=>{});
-  }
+  if(seleccion) seleccion.fila.classList.remove('seleccionada');
+  seleccion = {id, fila};
+  fila.classList.add('seleccionada');
+  document.getElementById('barraSeleccion').classList.add('show');
 }
+function cancelarSeleccion(){
+  if(seleccion) seleccion.fila.classList.remove('seleccionada');
+  seleccion = null;
+  document.getElementById('barraSeleccion').classList.remove('show');
+}
+document.getElementById('btnCancelarSel').onclick = cancelarSeleccion;
+document.getElementById('btnBorrarSel').onclick = ()=>{
+  if(!seleccion) return;
+  if(confirm('¿Eliminar este mensaje?')){
+    db.collection('chatMensajes').doc(seleccion.id).delete().catch(()=>{});
+  }
+  cancelarSeleccion();
+};
 function activarToqueLargo(el, id, esMio){
   let temporizador;
-  const iniciar = ()=>{ temporizador = setTimeout(()=> confirmarBorrarMensaje(id, esMio), 550); };
+  const iniciar = ()=>{ temporizador = setTimeout(()=> seleccionarMensaje(id, esMio, el), 500); };
   const cancelar = ()=> clearTimeout(temporizador);
   el.addEventListener('touchstart', iniciar, {passive:true});
   el.addEventListener('touchend', cancelar);
@@ -497,6 +644,8 @@ function iniciarMensajes(){
     const box = document.getElementById('mensajes');
     box.innerHTML = '';
     ultimosMensajes = [];
+    seleccion = null;
+    document.getElementById('barraSeleccion').classList.remove('show');
     snap.forEach(doc=>{
       const m = doc.data();
       ultimosMensajes.push({id:doc.id, ...m});
@@ -510,6 +659,8 @@ function iniciarMensajes(){
       let burbuja = '';
       if(m.tipo === 'sticker'){
         burbuja = `<div class="burbuja sticker"><img src="${m.stickerURL}"><div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
+      } else if(m.tipo === 'foto'){
+        burbuja = `<div class="burbuja foto"><img src="${m.fotoURL}"><div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
       } else {
         burbuja = `<div class="burbuja">${renderTexto(m.texto||'')}<div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
       }
@@ -527,9 +678,7 @@ function iniciarMensajes(){
       snap.docChanges().forEach(change=>{
         if(change.type === 'added'){
           const m = change.doc.data();
-          if(m.uid !== miUid && document.visibilityState !== 'visible'){
-            mostrarNotificacion(m);
-          }
+          if(m.uid !== miUid && document.visibilityState !== 'visible') mostrarNotificacion(m);
         }
       });
     }
@@ -553,7 +702,19 @@ async function enviarMensaje(){
   });
 }
 
-/* -------- stickers -------- */
+/* -------- enviar foto real -------- */
+document.getElementById('btnFoto').onclick = ()=> document.getElementById('fotoMsjInput').click();
+document.getElementById('fotoMsjInput').onchange = async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  e.target.value = '';
+  const url = await comprimir(file, 180, 900);
+  await db.collection('chatMensajes').add({
+    uid: miUid, nombre: miNombre, foto: miFoto || null,
+    tipo: 'foto', fotoURL: url, fecha: firebase.firestore.FieldValue.serverTimestamp()
+  });
+};
+
+/* -------- stickers reutilizables -------- */
 document.getElementById('addStickerLabel').onclick = ()=> document.getElementById('stickerInput').click();
 document.getElementById('stickerInput').onchange = async (e)=>{
   const file = e.target.files[0]; if(!file) return;
@@ -582,7 +743,6 @@ function iniciarStickers(){
 }
 
 function iniciarChat(){
-  actualizarUIAdmin();
   pedirNotificaciones();
   iniciarPresencia();
   iniciarLectura();
@@ -590,12 +750,6 @@ function iniciarChat(){
   iniciarMensajes();
   iniciarStickers();
   iniciarEscribiendo();
-}
-
-/* si ya entró antes en este dispositivo, saltar la pantalla de entrada */
-if(miNombre){
-  document.getElementById('entrada').style.display='none';
-  iniciarChat();
 }
 </script>
 </body>
