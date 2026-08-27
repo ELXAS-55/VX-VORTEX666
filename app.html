@@ -327,6 +327,7 @@ function iniciarPreviewChat(){
     let texto = m.texto || '';
     if(m.tipo === 'sticker') texto = '📷 Sticker';
     if(m.tipo === 'foto') texto = '📷 Foto';
+    if(m.tipo === 'audio') texto = '🎤 Nota de voz';
     document.getElementById('previewUltimoMsj').textContent = `${m.nombre||''}: ${texto}`;
     document.getElementById('horaUltimoMsj').textContent = m.fecha && m.fecha.toDate ? m.fecha.toDate().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) : '';
   });

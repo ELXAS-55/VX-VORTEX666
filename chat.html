@@ -79,6 +79,9 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 .modal.show{display:flex;}
 .modalBox{background:var(--panel2);border:1px solid rgba(47,143,255,.3);border-radius:8px;padding:22px;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;gap:14px;}
 .modalBox h3{font-size:1rem;}
+#indicadorGrabacion{position:absolute;left:0;right:0;bottom:60px;background:var(--panel2);display:none;align-items:center;justify-content:space-between;padding:10px 14px;z-index:32;border-top:1px solid rgba(200,50,50,.4);color:#da5f5f;font-weight:600;font-size:.87rem;}
+#btnCancelarGrabacion{cursor:pointer;color:var(--pdim);}
+.burbuja audio{max-width:200px;height:36px;}
 .solRow{display:flex;align-items:center;gap:10px;padding:8px 2px;}
 .solInfo{flex:1;min-width:0;}
 .solNombre{font-size:.85rem;font-weight:600;}
@@ -219,9 +222,14 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
     <div class="ibtn" id="btnEmoji">😀</div>
     <div class="ibtn" id="btnFoto">📸</div>
     <div class="ibtn" id="btnSticker">🖼️</div>
+    <div class="ibtn" id="btnAudio">🎤</div>
     <textarea id="texto" rows="1" placeholder="Escribe un mensaje..."></textarea>
     <button id="enviar">➤</button>
     <input type="file" id="fotoMsjInput" accept="image/*" style="display:none">
+  </div>
+  <div id="indicadorGrabacion">
+    <span>🔴 Grabando... <span id="tiempoGrabacion">0:00</span></span>
+    <span id="btnCancelarGrabacion">✕ Cancelar</span>
   </div>
 </div>
 
@@ -622,6 +630,7 @@ function mostrarNotificacion(m){
   let cuerpo = m.texto || '';
   if(m.tipo === 'sticker') cuerpo = '📷 Envió un sticker';
   if(m.tipo === 'foto') cuerpo = '📷 Envió una foto';
+  if(m.tipo === 'audio') cuerpo = '🎤 Nota de voz';
   const opciones = {body: cuerpo, icon: 'icon-192.png', tag: 'vx-chat'};
   if(navigator.serviceWorker && navigator.serviceWorker.ready){
     navigator.serviceWorker.ready.then(reg=> reg.showNotification(m.nombre || 'Nuevo mensaje', opciones)).catch(()=>{
@@ -706,6 +715,8 @@ function iniciarMensajes(){
         burbuja = `<div class="burbuja sticker"><img src="${m.stickerURL}"><div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
       } else if(m.tipo === 'foto'){
         burbuja = `<div class="burbuja foto"><img src="${m.fotoURL}"><div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
+      } else if(m.tipo === 'audio'){
+        burbuja = `<div class="burbuja"><audio controls src="${m.audioURL}"></audio><div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
       } else {
         burbuja = `<div class="burbuja">${renderTexto(m.texto||'')}<div class="pie"><span class="hora">${hora}</span>${checks}</div></div>`;
       }
@@ -758,6 +769,76 @@ document.getElementById('fotoMsjInput').onchange = async (e)=>{
     tipo: 'foto', fotoURL: url, fecha: firebase.firestore.FieldValue.serverTimestamp()
   });
 };
+
+/* -------- notas de voz -------- */
+let mediaRecorder = null;
+let audioChunks = [];
+let grabando = false;
+let grabaTimer = null;
+let grabaInicio = 0;
+
+function formatoTiempo(seg){
+  const m = Math.floor(seg/60);
+  const s = seg%60;
+  return `${m}:${s.toString().padStart(2,'0')}`;
+}
+function mostrarIndicadorGrabacion(){ document.getElementById('indicadorGrabacion').style.display = 'flex'; }
+function ocultarIndicadorGrabacion(){
+  document.getElementById('indicadorGrabacion').style.display = 'none';
+  document.getElementById('tiempoGrabacion').textContent = '0:00';
+}
+
+async function iniciarGrabacion(){
+  if(grabando) return;
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+    mediaRecorder.ondataavailable = e=> audioChunks.push(e.data);
+    mediaRecorder.start();
+    grabando = true;
+    grabaInicio = Date.now();
+    mostrarIndicadorGrabacion();
+    grabaTimer = setInterval(()=>{
+      const seg = Math.floor((Date.now()-grabaInicio)/1000);
+      document.getElementById('tiempoGrabacion').textContent = formatoTiempo(seg);
+      if(seg >= 60) detenerGrabacion(true);
+    }, 200);
+  }catch(err){
+    alert('No se pudo usar el micrófono: ' + err.message);
+  }
+}
+function detenerGrabacion(enviar){
+  if(!mediaRecorder || !grabando) return;
+  clearInterval(grabaTimer);
+  grabando = false;
+  ocultarIndicadorGrabacion();
+  const duracionSeg = Math.floor((Date.now()-grabaInicio)/1000);
+  mediaRecorder.onstop = async ()=>{
+    mediaRecorder.stream.getTracks().forEach(t=>t.stop());
+    if(!enviar || audioChunks.length === 0){ audioChunks = []; return; }
+    const blob = new Blob(audioChunks, {type: mediaRecorder.mimeType || 'audio/webm'});
+    audioChunks = [];
+    if(blob.size > 900*1024){ alert('La nota de voz quedó muy pesada, intenta algo más corto.'); return; }
+    const reader = new FileReader();
+    reader.onload = async ()=>{
+      await db.collection('chatMensajes').add({
+        uid: miUid, nombre: miNombre, foto: miFoto || null,
+        tipo: 'audio', audioURL: reader.result, duracion: duracionSeg,
+        fecha: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    };
+    reader.readAsDataURL(blob);
+  };
+  mediaRecorder.stop();
+}
+const btnAudio = document.getElementById('btnAudio');
+btnAudio.addEventListener('touchstart', e=>{ e.preventDefault(); iniciarGrabacion(); }, {passive:false});
+btnAudio.addEventListener('touchend', e=>{ e.preventDefault(); detenerGrabacion(true); });
+btnAudio.addEventListener('mousedown', iniciarGrabacion);
+btnAudio.addEventListener('mouseup', ()=> detenerGrabacion(true));
+btnAudio.addEventListener('mouseleave', ()=>{ if(grabando) detenerGrabacion(true); });
+document.getElementById('btnCancelarGrabacion').onclick = ()=> detenerGrabacion(false);
 
 /* -------- stickers reutilizables -------- */
 document.getElementById('addStickerLabel').onclick = ()=> document.getElementById('stickerInput').click();
