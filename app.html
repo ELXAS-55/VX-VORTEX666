@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>VX VORTEX⁶⁶⁶ — App</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2f8fff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#040711;--panel:#0a1020;--panel2:#0d1730;--ember:#2f8fff;--blood:#0d3d73;--pdim:#b8aea0;--parchment:#ece4d8;--online:#2ee6a6;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--parchment);font-family:"Rajdhani",sans-serif;position:fixed;inset:0;width:100%;overflow:hidden;}
+h1,h2,h3{font-family:"Anton",sans-serif;text-transform:uppercase;letter-spacing:.02em;}
+a{color:inherit;text-decoration:none;}
+
+.space-bg{position:fixed;inset:0;z-index:-3;overflow:hidden;background:var(--bg);}
+.stars-layer{position:absolute;inset:-50%;width:200%;height:200%;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, #ffffff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 75% 15%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 50% 60%, #bcd9ff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 85% 75%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 10% 80%, #bcd9ff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 35% 45%, #ffffff 100%, transparent),
+    radial-gradient(1px 1px at 60% 90%, #ffffff 100%, transparent),
+    radial-gradient(1.5px 1.5px at 92% 40%, #bcd9ff 100%, transparent),
+    radial-gradient(1px 1px at 5% 55%, #ffffff 100%, transparent),
+    radial-gradient(2px 2px at 45% 12%, #ffffff 100%, transparent);
+  background-repeat:repeat;background-size:600px 600px;animation:driftStars 140s linear infinite;}
+.nebula-glow{position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(47,143,255,.16),transparent 45%),radial-gradient(circle at 80% 70%,rgba(13,61,115,.32),transparent 50%);}
+@keyframes driftStars{from{transform:translate(0,0);}to{transform:translate(-600px,-300px);}}
+@media(prefers-reduced-motion:reduce){.stars-layer{animation:none!important;}}
+
+.app{max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column;position:relative;background:rgba(4,7,17,.4);}
+
+/* ---------- ENTRADA ---------- */
+#entrada{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:30px 26px;background:var(--bg);text-align:center;}
+#entrada .brand-ico{font-size:2.3rem;}
+.finput{width:100%;background:#0d0a09;border:1px solid rgba(47,143,255,.3);color:var(--parchment);padding:13px 14px;font-family:"Rajdhani";font-size:.97rem;border-radius:4px;}
+.upload-box{border:1.5px dashed var(--ember);border-radius:50%;width:90px;height:90px;display:flex;align-items:center;justify-content:center;color:var(--pdim);font-size:.7rem;cursor:pointer;overflow:hidden;background:#0d0a09;}
+.upload-box img{width:100%;height:100%;object-fit:cover;}
+.upload-box input{display:none;}
+.btn-primary{width:100%;padding:14px 0;border:none;border-radius:4px;background:var(--ember);color:#04101f;font-family:"Anton";letter-spacing:.05em;font-size:1rem;cursor:pointer;}
+
+/* ---------- TOPBAR + TABS (idéntico a la estructura de WhatsApp) ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--panel2);border-bottom:1px solid rgba(47,143,255,.25);}
+.topbar .brand{font-family:"Anton";font-size:1.05rem;letter-spacing:.03em;display:flex;align-items:center;gap:8px;}
+.topbar .icons{display:flex;gap:16px;font-size:1.15rem;color:var(--pdim);}
+.tabs{display:flex;background:var(--panel2);border-bottom:1px solid rgba(47,143,255,.25);}
+.tab{flex:1;text-align:center;padding:11px 0;font-family:"Rajdhani";font-weight:700;font-size:.78rem;letter-spacing:.06em;color:var(--pdim);cursor:pointer;border-bottom:3px solid transparent;}
+.tab.active{color:var(--ember);border-color:var(--ember);}
+.tabContent{flex:1;overflow-y:auto;display:none;}
+.tabContent.active{display:block;}
+
+/* ---------- CHATS ---------- */
+.chatItem{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(47,143,255,.1);cursor:pointer;}
+.chatAvatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--blood),var(--ember));display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.chatInfo{flex:1;min-width:0;}
+.chatNombre{font-weight:700;font-size:.95rem;}
+.chatPreview{font-size:.8rem;color:var(--pdim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.chatHora{font-size:.68rem;color:var(--pdim);flex-shrink:0;}
+
+/* ---------- ESTADOS ---------- */
+.estadosLista{padding:6px 0;}
+.miEstadoRow{display:flex;align-items:center;gap:12px;padding:12px 14px;cursor:pointer;}
+.circuloEstado{position:relative;width:52px;height:52px;border-radius:50%;flex-shrink:0;}
+.circuloEstado img{width:100%;height:100%;border-radius:50%;object-fit:cover;}
+.circuloEstado .inicial{width:100%;height:100%;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-family:"Anton";}
+.circuloEstado.anillo{box-shadow:0 0 0 3px var(--ember);}
+.circuloEstado .mas{position:absolute;bottom:-2px;right:-2px;width:20px;height:20px;border-radius:50%;background:var(--ember);color:#04101f;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:900;border:2px solid var(--bg);}
+.estadoSeparador{padding:8px 14px 4px;font-size:.72rem;color:var(--pdim);letter-spacing:.08em;text-transform:uppercase;}
+.estadoNombre{font-weight:700;font-size:.9rem;}
+.estadoHora{font-size:.72rem;color:var(--pdim);}
+
+/* ---------- LLAMADAS ---------- */
+.avisoLlamadas{padding:12px 14px;font-size:.75rem;color:var(--pdim);background:rgba(47,143,255,.08);border-bottom:1px solid rgba(47,143,255,.15);}
+#llamadaActiva{position:fixed;inset:0;background:#000;z-index:90;display:none;flex-direction:column;align-items:center;justify-content:space-between;}
+#llamadaActiva.show{display:flex;}
+#videoRemoto{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+#videoLocal{position:absolute;bottom:110px;right:16px;width:100px;height:140px;border-radius:8px;object-fit:cover;border:2px solid var(--ember);z-index:2;background:#111;}
+#avatarLlamada{width:120px;height:120px;border-radius:50%;background:var(--panel2);display:none;align-items:center;justify-content:center;font-family:"Anton";font-size:2.5rem;margin-top:auto;margin-bottom:auto;overflow:hidden;z-index:2;}
+#avatarLlamada img{width:100%;height:100%;object-fit:cover;}
+#llamadaInfo{color:#fff;text-align:center;padding:16px 14px;font-weight:700;position:relative;z-index:2;background:linear-gradient(rgba(0,0,0,.55),transparent);width:100%;}
+#controlesLlamada{display:flex;gap:22px;padding:26px;z-index:2;}
+#controlesLlamada button{width:56px;height:56px;border-radius:50%;border:none;font-size:1.4rem;cursor:pointer;background:rgba(255,255,255,.15);color:#fff;}
+#btnColgar{background:#da5f5f!important;}
+
+/* ---------- VISOR DE ESTADO ---------- */
+#visor{position:fixed;inset:0;background:#000;z-index:80;display:none;flex-direction:column;}
+#visor.show{display:flex;}
+#visorBarra{display:flex;gap:4px;padding:8px 10px 0;}
+#visorBarra .seg{flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:2px;}
+#visorHead{display:flex;align-items:center;gap:10px;padding:10px;color:#fff;}
+#visorHead img{width:34px;height:34px;border-radius:50%;object-fit:cover;}
+#visorCerrar{margin-left:auto;font-size:1.4rem;cursor:pointer;}
+#visorContenido{flex:1;display:flex;align-items:center;justify-content:center;padding:20px;}
+#visorContenido img{max-width:100%;max-height:100%;border-radius:6px;}
+#visorContenido .texto{color:#fff;font-size:1.4rem;text-align:center;font-family:"Anton";padding:30px;}
+#visorBorrar{position:absolute;bottom:20px;left:0;right:0;text-align:center;color:#da5f5f;font-weight:700;cursor:pointer;display:none;}
+
+/* ---------- MODAL CREAR ESTADO ---------- */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:70;align-items:center;justify-content:center;padding:20px;}
+.modal.show{display:flex;}
+.modalBox{background:var(--panel2);border:1px solid rgba(47,143,255,.3);border-radius:8px;padding:22px;width:100%;max-width:340px;display:flex;flex-direction:column;gap:12px;}
+.modalBox h3{font-size:1rem;}
+textarea.finput{resize:none;min-height:70px;font-family:"Rajdhani";}
+.opcionesEstado{display:flex;gap:10px;}
+.opcionesEstado button{flex:1;padding:11px 0;border:none;border-radius:4px;background:var(--panel);color:var(--parchment);font-weight:700;font-size:.8rem;cursor:pointer;}
+.opcionesEstado button.activa{background:var(--ember);color:#04101f;}
+</style>
+</head>
+<body>
+<div class="space-bg"><div class="stars-layer"></div><div class="nebula-glow"></div></div>
+
+<div class="app">
+
+  <!-- ENTRADA -->
+  <div id="entrada">
+    <div class="brand-ico">⚡</div>
+    <h1>VX VORTEX⁶⁶⁶</h1>
+    <p style="color:var(--pdim);font-size:.85rem;margin-top:-8px;">Elige tu nombre y una foto (opcional) para entrar a la app.</p>
+    <label class="upload-box" id="uploadBox">📷<input type="file" id="fotoInput" accept="image/*"></label>
+    <input class="finput" id="nombreInput" placeholder="Tu nombre en el juego" maxlength="24">
+    <button class="btn-primary" id="btnEntrar">ENTRAR</button>
+  </div>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">⚡ VX VORTEX⁶⁶⁶</div>
+    <div class="icons"><a href="index.html" title="Ir a la web">🌐</a></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" data-tab="chats">CHATS</div>
+    <div class="tab" data-tab="estados">ESTADOS</div>
+    <div class="tab" data-tab="llamadas">LLAMADAS</div>
+  </div>
+
+  <!-- CHATS -->
+  <div class="tabContent active" id="tabChats">
+    <div class="chatItem" onclick="location.href='chat.html'">
+      <div class="chatAvatar">⚡</div>
+      <div class="chatInfo">
+        <div class="chatNombre">Clan VX VORTEX⁶⁶⁶</div>
+        <div class="chatPreview" id="previewUltimoMsj">Toca para abrir el chat del clan</div>
+      </div>
+      <div class="chatHora" id="horaUltimoMsj"></div>
+    </div>
+  </div>
+
+  <!-- ESTADOS -->
+  <div class="tabContent" id="tabEstados">
+    <div class="estadosLista">
+      <div class="miEstadoRow" id="filaMiEstado">
+        <div class="circuloEstado" id="circuloMiEstado"><div class="inicial">＋</div><div class="mas">＋</div></div>
+        <div>
+          <div class="estadoNombre">Mi estado</div>
+          <div class="estadoHora" id="miEstadoInfo">Toca para agregar una actualización</div>
+        </div>
+      </div>
+      <div class="estadoSeparador">Actualizaciones recientes</div>
+      <div id="listaEstadosOtros"></div>
+    </div>
+  </div>
+
+  <!-- LLAMADAS -->
+  <div class="tabContent" id="tabLlamadas">
+    <div class="avisoLlamadas">📞 Llamadas 1 a 1 por internet. Ambas personas deben tener la app/chat abierto.</div>
+    <div id="listaLlamables"></div>
+  </div>
+</div>
+
+<!-- LLAMADA ENTRANTE -->
+<div class="modal" id="modalEntrante">
+  <div class="modalBox" style="text-align:center;">
+    <div class="chatAvatar" id="entranteAvatar" style="margin:0 auto 10px;width:74px;height:74px;font-size:2rem;">📞</div>
+    <h3 id="entranteNombre">Alguien</h3>
+    <p id="entranteTipo" style="color:var(--pdim);margin-top:4px;">te está llamando...</p>
+    <div style="display:flex;gap:14px;margin-top:16px;">
+      <button class="btn-primary" style="background:#da5f5f;" id="btnRechazar">Rechazar</button>
+      <button class="btn-primary" id="btnAceptar">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<!-- LLAMADA ACTIVA -->
+<div id="llamadaActiva">
+  <video id="videoRemoto" autoplay playsinline></video>
+  <div id="avatarLlamada"></div>
+  <video id="videoLocal" autoplay playsinline muted></video>
+  <div id="llamadaInfo">Conectando...</div>
+  <div id="controlesLlamada">
+    <button id="btnMute">🎙️</button>
+    <button id="btnCamara">📹</button>
+    <button id="btnColgar">📴</button>
+  </div>
+</div>
+
+<!-- VISOR DE ESTADO -->
+<div id="visor">
+  <div id="visorBarra"></div>
+  <div id="visorHead">
+    <img id="visorFoto" src="">
+    <div><div id="visorNombre" style="font-weight:700;font-size:.9rem;"></div><div id="visorTiempo" style="font-size:.72rem;opacity:.75;"></div></div>
+    <div id="visorCerrar">✕</div>
+  </div>
+  <div id="visorContenido"></div>
+  <div id="visorBorrar">🗑️ Eliminar esta actualización</div>
+</div>
+
+<!-- MODAL CREAR ESTADO -->
+<div class="modal" id="modalEstado">
+  <div class="modalBox">
+    <h3>Nueva actualización</h3>
+    <div class="opcionesEstado">
+      <button class="activa" id="opTexto">Texto</button>
+      <button id="opFoto">Foto</button>
+    </div>
+    <textarea class="finput" id="estadoTexto" placeholder="Escribe algo..." maxlength="120"></textarea>
+    <input type="file" id="estadoFotoInput" accept="image/*" style="display:none">
+    <img id="estadoFotoPreview" style="display:none;width:100%;border-radius:6px;max-height:200px;object-fit:cover;">
+    <button class="btn-primary" id="btnPublicarEstado">PUBLICAR</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+if(!window._fbInit){
+  firebase.initializeApp({
+    apiKey: "AIzaSyD6IbhFlbhrCNy1lPpJ49_By3tt-aGiDJQ",
+    authDomain: "vx-vortex-666-288f7.firebaseapp.com",
+    projectId: "vx-vortex-666-288f7",
+    storageBucket: "vx-vortex-666-288f7.firebasestorage.app",
+    messagingSenderId: "1053204421634",
+    appId: "1:1053204421634:web:74871508e1b22371c39b1b"
+  });
+  window._db = firebase.firestore();
+  window._fbInit = true;
+}
+const db = window._db;
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
+
+function comprimir(file, maxKB, maxSize){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      const img=new Image();
+      img.onload=()=>{
+        const c=document.createElement("canvas");
+        let w=img.width,h=img.height;
+        if(w>maxSize){h=h*(maxSize/w);w=maxSize;}
+        if(h>maxSize){w=w*(maxSize/h);h=maxSize;}
+        c.width=w;c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h);
+        let q=0.85,result=c.toDataURL("image/jpeg",q);
+        while(result.length>maxKB*1024*1.37 && q>0.3){q-=0.1;result=c.toDataURL("image/jpeg",q);}
+        res(result);
+      };
+      img.src=e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+function escapeHtml(str){ const d=document.createElement('div'); d.textContent=str; return d.innerHTML; }
+function tiempoRelativo(fecha){
+  if(!fecha || !fecha.toDate) return '';
+  const ms = Date.now() - fecha.toDate().getTime();
+  const min = Math.floor(ms/60000);
+  if(min < 1) return 'ahora';
+  if(min < 60) return `hace ${min} min`;
+  const h = Math.floor(min/60);
+  if(h < 24) return `hace ${h} h`;
+  return fecha.toDate().toLocaleDateString('es');
+}
+
+/* -------- identidad (misma que el chat) -------- */
+function uidGen(){return 'u'+Date.now()+Math.random().toString(36).slice(2,8);}
+let miUid = localStorage.getItem('vxChatUid');
+if(!miUid){ miUid = uidGen(); localStorage.setItem('vxChatUid', miUid); }
+let miNombre = localStorage.getItem('vxChatNombre') || '';
+let miFoto = localStorage.getItem('vxChatFoto') || '';
+let fotoTemp = null;
+
+document.getElementById('uploadBox').onclick = ()=> document.getElementById('fotoInput').click();
+document.getElementById('fotoInput').onchange = async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  fotoTemp = await comprimir(file, 80, 300);
+  document.getElementById('uploadBox').innerHTML = `<img src="${fotoTemp}">`;
+};
+if(miNombre) document.getElementById('nombreInput').value = miNombre;
+
+document.getElementById('btnEntrar').onclick = ()=>{
+  const nombre = document.getElementById('nombreInput').value.trim();
+  if(!nombre){ alert('Escribe tu nombre.'); return; }
+  miNombre = nombre;
+  if(fotoTemp) miFoto = fotoTemp;
+  localStorage.setItem('vxChatNombre', miNombre);
+  if(miFoto) localStorage.setItem('vxChatFoto', miFoto);
+  document.getElementById('entrada').style.display = 'none';
+  iniciarApp();
+};
+
+if(miNombre){
+  document.getElementById('entrada').style.display = 'none';
+}
+
+/* -------- pestañas -------- */
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.onclick = ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.tabContent').forEach(c=>c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab'+tab.dataset.tab.charAt(0).toUpperCase()+tab.dataset.tab.slice(1)).classList.add('active');
+  };
+});
+
+/* -------- vista previa del último mensaje del grupo -------- */
+function iniciarPreviewChat(){
+  db.collection('chatMensajes').orderBy('fecha','desc').limit(1).onSnapshot(snap=>{
+    if(snap.empty) return;
+    const m = snap.docs[0].data();
+    let texto = m.texto || '';
+    if(m.tipo === 'sticker') texto = '📷 Sticker';
+    if(m.tipo === 'foto') texto = '📷 Foto';
+    document.getElementById('previewUltimoMsj').textContent = `${m.nombre||''}: ${texto}`;
+    document.getElementById('horaUltimoMsj').textContent = m.fecha && m.fecha.toDate ? m.fecha.toDate().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'}) : '';
+  });
+}
+
+/* -------- estados (24h) -------- */
+let misEstados = [];
+let estadosPorUsuario = {};
+function iniciarEstados(){
+  const desde = firebase.firestore.Timestamp.fromMillis(Date.now() - 24*60*60*1000);
+  db.collection('chatEstados').where('fecha','>', desde).orderBy('fecha','asc').onSnapshot(snap=>{
+    estadosPorUsuario = {};
+    snap.forEach(doc=>{
+      const e = {id:doc.id, ...doc.data()};
+      if(!estadosPorUsuario[e.uid]) estadosPorUsuario[e.uid] = [];
+      estadosPorUsuario[e.uid].push(e);
+    });
+    misEstados = estadosPorUsuario[miUid] || [];
+    pintarMiEstado();
+    pintarEstadosOtros();
+  });
+}
+function pintarMiEstado(){
+  const circulo = document.getElementById('circuloMiEstado');
+  const info = document.getElementById('miEstadoInfo');
+  if(misEstados.length){
+    const ultimo = misEstados[misEstados.length-1];
+    circulo.className = 'circuloEstado anillo';
+    circulo.innerHTML = ultimo.tipo === 'foto'
+      ? `<img src="${ultimo.contenido}">`
+      : `<div class="inicial">${(miNombre||'?').charAt(0).toUpperCase()}</div>`;
+    info.textContent = `${misEstados.length} actualización(es) · ${tiempoRelativo(ultimo.fecha)}`;
+  } else {
+    circulo.className = 'circuloEstado';
+    circulo.innerHTML = `<div class="inicial">${miFoto?`<img src="${miFoto}">`:'＋'}</div><div class="mas">＋</div>`;
+    info.textContent = 'Toca para agregar una actualización';
+  }
+}
+document.getElementById('filaMiEstado').onclick = ()=>{
+  if(misEstados.length) abrirVisor(miUid); else abrirModalEstado();
+};
+function pintarEstadosOtros(){
+  const cont = document.getElementById('listaEstadosOtros');
+  cont.innerHTML = '';
+  Object.entries(estadosPorUsuario).forEach(([uid, lista])=>{
+    if(uid === miUid) return;
+    const ultimo = lista[lista.length-1];
+    const row = document.createElement('div');
+    row.className = 'miEstadoRow';
+    row.innerHTML = `
+      <div class="circuloEstado anillo">${ultimo.foto?`<img src="${ultimo.foto}">`:`<div class="inicial">${(ultimo.nombre||'?').charAt(0).toUpperCase()}</div>`}</div>
+      <div><div class="estadoNombre">${escapeHtml(ultimo.nombre||'Miembro')}</div><div class="estadoHora">${tiempoRelativo(ultimo.fecha)}</div></div>`;
+    row.onclick = ()=> abrirVisor(uid);
+    cont.appendChild(row);
+  });
+}
+
+/* -------- visor de estado -------- */
+let visorLista = [];
+let visorIndice = 0;
+let visorTimer = null;
+function abrirVisor(uid){
+  visorLista = estadosPorUsuario[uid] || [];
+  if(!visorLista.length) return;
+  visorIndice = visorLista.length - 1;
+  document.getElementById('visorBarra').innerHTML = visorLista.map(()=>'<div class="seg"></div>').join('');
+  document.getElementById('visor').classList.add('show');
+  mostrarEstadoVisor();
+}
+function mostrarEstadoVisor(){
+  clearTimeout(visorTimer);
+  const e = visorLista[visorIndice];
+  document.getElementById('visorFoto').src = e.foto || '';
+  document.getElementById('visorNombre').textContent = e.nombre || '';
+  document.getElementById('visorTiempo').textContent = tiempoRelativo(e.fecha);
+  const cont = document.getElementById('visorContenido');
+  cont.innerHTML = e.tipo === 'foto' ? `<img src="${e.contenido}">` : `<div class="texto">${escapeHtml(e.contenido||'')}</div>`;
+  document.querySelectorAll('#visorBarra .seg').forEach((s,i)=>{ s.style.background = i<=visorIndice ? 'rgba(255,255,255,.95)' : 'rgba(255,255,255,.3)'; });
+  document.getElementById('visorBorrar').style.display = (e.uid === miUid) ? 'block' : 'none';
+  visorTimer = setTimeout(siguienteEstado, 4500);
+}
+function siguienteEstado(){
+  if(visorIndice < visorLista.length - 1){ visorIndice++; mostrarEstadoVisor(); }
+  else cerrarVisor();
+}
+function cerrarVisor(){
+  clearTimeout(visorTimer);
+  document.getElementById('visor').classList.remove('show');
+}
+document.getElementById('visorCerrar').onclick = cerrarVisor;
+document.getElementById('visorContenido').onclick = siguienteEstado;
+document.getElementById('visorBorrar').onclick = async ()=>{
+  const e = visorLista[visorIndice];
+  if(confirm('¿Eliminar esta actualización?')){
+    await db.collection('chatEstados').doc(e.id).delete();
+    cerrarVisor();
+  }
+};
+
+/* -------- crear estado -------- */
+let modoEstado = 'texto';
+let fotoEstadoTemp = null;
+function abrirModalEstado(){
+  document.getElementById('modalEstado').classList.add('show');
+}
+document.getElementById('opTexto').onclick = ()=>{
+  modoEstado = 'texto';
+  document.getElementById('opTexto').classList.add('activa');
+  document.getElementById('opFoto').classList.remove('activa');
+  document.getElementById('estadoTexto').style.display = 'block';
+  document.getElementById('estadoFotoPreview').style.display = 'none';
+};
+document.getElementById('opFoto').onclick = ()=>{
+  modoEstado = 'foto';
+  document.getElementById('opFoto').classList.add('activa');
+  document.getElementById('opTexto').classList.remove('activa');
+  document.getElementById('estadoTexto').style.display = 'none';
+  document.getElementById('estadoFotoInput').click();
+};
+document.getElementById('estadoFotoInput').onchange = async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  fotoEstadoTemp = await comprimir(file, 180, 900);
+  document.getElementById('estadoFotoPreview').src = fotoEstadoTemp;
+  document.getElementById('estadoFotoPreview').style.display = 'block';
+};
+document.getElementById('btnPublicarEstado').onclick = async ()=>{
+  let contenido;
+  if(modoEstado === 'texto'){
+    contenido = document.getElementById('estadoTexto').value.trim();
+    if(!contenido){ alert('Escribe algo para tu estado.'); return; }
+  } else {
+    if(!fotoEstadoTemp){ alert('Elige una foto.'); return; }
+    contenido = fotoEstadoTemp;
+  }
+  await db.collection('chatEstados').add({
+    uid: miUid, nombre: miNombre, foto: miFoto || null,
+    tipo: modoEstado, contenido, fecha: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  document.getElementById('modalEstado').classList.remove('show');
+  document.getElementById('estadoTexto').value = '';
+  document.getElementById('estadoFotoPreview').style.display = 'none';
+  fotoEstadoTemp = null;
+};
+document.getElementById('modalEstado').addEventListener('click', e=>{
+  if(e.target.id === 'modalEstado') document.getElementById('modalEstado').classList.remove('show');
+});
+
+/* ===================== LLAMADAS (WebRTC + Firestore) ===================== */
+const ICE_SERVERS = { iceServers: [
+  {urls:'stun:stun.l.google.com:19302'},
+  {urls:'stun:stun1.l.google.com:19302'}
+]};
+let pc = null;
+let localStream = null;
+let audioRemotoEl = null;
+let llamadaActualId = null;
+let unsubLlamadaDoc = null;
+let unsubCandidatosRemoto = null;
+let llamadaEntranteId = null;
+let llamadaEntranteDatos = null;
+
+function iniciarDirectorioLlamadas(){
+  db.collection('chatUsuarios').onSnapshot(snap=>{
+    const cont = document.getElementById('listaLlamables');
+    cont.innerHTML = '';
+    snap.forEach(doc=>{
+      if(doc.id === miUid) return;
+      const m = doc.data();
+      const row = document.createElement('div');
+      row.className = 'chatItem';
+      row.innerHTML = `
+        <div class="chatAvatar">${m.foto?`<img src="${m.foto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`:(m.nombre||'?').charAt(0).toUpperCase()}</div>
+        <div class="chatInfo"><div class="chatNombre">${escapeHtml(m.nombre||'Miembro')}</div><div class="chatPreview">Toca 🎙️ o 📹 para llamar</div></div>
+        <div style="display:flex;gap:12px;font-size:1.25rem;">
+          <span data-audio>🎙️</span>
+          <span data-video>📹</span>
+        </div>`;
+      row.querySelector('[data-audio]').onclick = (e)=>{ e.stopPropagation(); iniciarLlamada(doc.id, m.nombre, m.foto, 'audio'); };
+      row.querySelector('[data-video]').onclick = (e)=>{ e.stopPropagation(); iniciarLlamada(doc.id, m.nombre, m.foto, 'video'); };
+      cont.appendChild(row);
+    });
+  });
+}
+
+function iniciarEscuchaLlamadasEntrantes(){
+  db.collection('llamadas')
+    .where('receptorUid','==', miUid)
+    .where('estado','==','llamando')
+    .onSnapshot(snap=>{
+      snap.docChanges().forEach(change=>{
+        if(change.type === 'added') mostrarLlamadaEntrante(change.doc.id, change.doc.data());
+        if(change.type === 'removed') ocultarLlamadaEntrante();
+      });
+    });
+}
+function mostrarLlamadaEntrante(id, datos){
+  llamadaEntranteId = id;
+  llamadaEntranteDatos = datos;
+  document.getElementById('entranteAvatar').innerHTML = datos.llamanteFoto ? `<img src="${datos.llamanteFoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : '📞';
+  document.getElementById('entranteNombre').textContent = datos.llamanteNombre || 'Alguien';
+  document.getElementById('entranteTipo').textContent = (datos.tipo==='video' ? 'Videollamada' : 'Llamada de voz') + ' entrante...';
+  document.getElementById('modalEntrante').classList.add('show');
+}
+function ocultarLlamadaEntrante(){
+  document.getElementById('modalEntrante').classList.remove('show');
+  llamadaEntranteId = null;
+}
+document.getElementById('btnRechazar').onclick = async ()=>{
+  if(llamadaEntranteId) await db.collection('llamadas').doc(llamadaEntranteId).update({estado:'rechazada'}).catch(()=>{});
+  ocultarLlamadaEntrante();
+};
+document.getElementById('btnAceptar').onclick = async ()=>{
+  const id = llamadaEntranteId, datos = llamadaEntranteDatos;
+  ocultarLlamadaEntrante();
+  await aceptarLlamada(id, datos);
+};
+
+function mostrarUILlamada(tipo, nombre, foto, estadoTexto){
+  document.getElementById('llamadaActiva').classList.add('show');
+  document.getElementById('videoRemoto').style.display = tipo==='video' ? 'block' : 'none';
+  document.getElementById('videoLocal').style.display = tipo==='video' ? 'block' : 'none';
+  const avatar = document.getElementById('avatarLlamada');
+  avatar.style.display = tipo==='video' ? 'none' : 'flex';
+  avatar.innerHTML = foto ? `<img src="${foto}">` : (nombre||'?').charAt(0).toUpperCase();
+  document.getElementById('llamadaInfo').textContent = `${nombre||''} · ${estadoTexto}`;
+}
+function reproducirAudioRemoto(stream){
+  if(!audioRemotoEl){ audioRemotoEl = document.createElement('audio'); audioRemotoEl.autoplay = true; document.body.appendChild(audioRemotoEl); }
+  audioRemotoEl.srcObject = stream;
+}
+
+async function iniciarLlamada(receptorUid, receptorNombre, receptorFoto, tipo){
+  try{
+    const callRef = db.collection('llamadas').doc();
+    llamadaActualId = callRef.id;
+
+    localStream = await navigator.mediaDevices.getUserMedia({audio:true, video: tipo==='video'});
+    mostrarUILlamada(tipo, receptorNombre, receptorFoto, 'Llamando...');
+    if(tipo==='video') document.getElementById('videoLocal').srcObject = localStream;
+
+    pc = new RTCPeerConnection(ICE_SERVERS);
+    localStream.getTracks().forEach(t=> pc.addTrack(t, localStream));
+    pc.ontrack = (e)=>{
+      if(tipo==='video') document.getElementById('videoRemoto').srcObject = e.streams[0];
+      else reproducirAudioRemoto(e.streams[0]);
+    };
+    pc.onicecandidate = (e)=>{ if(e.candidate) callRef.collection('candidatosLlamante').add(e.candidate.toJSON()); };
+
+    const oferta = await pc.createOffer();
+    await pc.setLocalDescription(oferta);
+
+    await callRef.set({
+      llamanteUid: miUid, llamanteNombre: miNombre, llamanteFoto: miFoto||null,
+      receptorUid, receptorNombre, receptorFoto: receptorFoto||null,
+      tipo, estado:'llamando', oferta: {type:oferta.type, sdp:oferta.sdp},
+      creado: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    unsubLlamadaDoc = callRef.onSnapshot(async doc=>{
+      const d = doc.data();
+      if(!d) return;
+      if(d.respuesta && pc && !pc.currentRemoteDescription){
+        await pc.setRemoteDescription(new RTCSessionDescription(d.respuesta));
+        document.getElementById('llamadaInfo').textContent = `${receptorNombre||''} · En llamada`;
+      }
+      if(d.estado === 'rechazada'){ alert('La llamada fue rechazada.'); terminarLlamada(false); }
+      if(d.estado === 'finalizada'){ terminarLlamada(false); }
+    });
+    unsubCandidatosRemoto = callRef.collection('candidatosReceptor').onSnapshot(snap=>{
+      snap.docChanges().forEach(ch=>{ if(ch.type==='added') pc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{}); });
+    });
+  }catch(err){
+    alert('No se pudo iniciar la llamada: ' + err.message);
+    terminarLlamada(false);
+  }
+}
+
+async function aceptarLlamada(id, datos){
+  try{
+    llamadaActualId = id;
+    const callRef = db.collection('llamadas').doc(id);
+    const tipo = datos.tipo;
+
+    localStream = await navigator.mediaDevices.getUserMedia({audio:true, video: tipo==='video'});
+    mostrarUILlamada(tipo, datos.llamanteNombre, datos.llamanteFoto, 'Conectando...');
+    if(tipo==='video') document.getElementById('videoLocal').srcObject = localStream;
+
+    pc = new RTCPeerConnection(ICE_SERVERS);
+    localStream.getTracks().forEach(t=> pc.addTrack(t, localStream));
+    pc.ontrack = (e)=>{
+      if(tipo==='video') document.getElementById('videoRemoto').srcObject = e.streams[0];
+      else reproducirAudioRemoto(e.streams[0]);
+    };
+    pc.onicecandidate = (e)=>{ if(e.candidate) callRef.collection('candidatosReceptor').add(e.candidate.toJSON()); };
+
+    await pc.setRemoteDescription(new RTCSessionDescription(datos.oferta));
+    unsubCandidatosRemoto = callRef.collection('candidatosLlamante').onSnapshot(snap=>{
+      snap.docChanges().forEach(ch=>{ if(ch.type==='added') pc.addIceCandidate(new RTCIceCandidate(ch.doc.data())).catch(()=>{}); });
+    });
+
+    const respuesta = await pc.createAnswer();
+    await pc.setLocalDescription(respuesta);
+    await callRef.update({respuesta:{type:respuesta.type, sdp:respuesta.sdp}, estado:'conectada'});
+
+    document.getElementById('llamadaInfo').textContent = `${datos.llamanteNombre||''} · En llamada`;
+    unsubLlamadaDoc = callRef.onSnapshot(doc=>{
+      const d = doc.data();
+      if(d && d.estado === 'finalizada') terminarLlamada(false);
+    });
+  }catch(err){
+    alert('No se pudo conectar la llamada: ' + err.message);
+    terminarLlamada(false);
+  }
+}
+
+async function terminarLlamada(notificar){
+  if(notificar && llamadaActualId){
+    await db.collection('llamadas').doc(llamadaActualId).update({estado:'finalizada'}).catch(()=>{});
+  }
+  if(pc){ pc.close(); pc = null; }
+  if(localStream){ localStream.getTracks().forEach(t=>t.stop()); localStream = null; }
+  if(unsubLlamadaDoc){ unsubLlamadaDoc(); unsubLlamadaDoc = null; }
+  if(unsubCandidatosRemoto){ unsubCandidatosRemoto(); unsubCandidatosRemoto = null; }
+  if(audioRemotoEl) audioRemotoEl.srcObject = null;
+  document.getElementById('videoRemoto').srcObject = null;
+  document.getElementById('videoLocal').srcObject = null;
+  document.getElementById('llamadaActiva').classList.remove('show');
+  llamadaActualId = null;
+}
+document.getElementById('btnColgar').onclick = ()=> terminarLlamada(true);
+document.getElementById('btnMute').onclick = ()=>{
+  if(!localStream) return;
+  const track = localStream.getAudioTracks()[0]; if(!track) return;
+  track.enabled = !track.enabled;
+  document.getElementById('btnMute').textContent = track.enabled ? '🎙️' : '🔇';
+};
+document.getElementById('btnCamara').onclick = ()=>{
+  if(!localStream) return;
+  const track = localStream.getVideoTracks()[0]; if(!track) return;
+  track.enabled = !track.enabled;
+  document.getElementById('btnCamara').textContent = track.enabled ? '📹' : '🚫';
+};
+
+function iniciarApp(){
+  iniciarPreviewChat();
+  iniciarEstados();
+  iniciarDirectorioLlamadas();
+  iniciarEscuchaLlamadasEntrantes();
+}
+if(miNombre) iniciarApp();
+</script>
+</body>
+</html>
