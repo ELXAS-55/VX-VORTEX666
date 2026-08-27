@@ -74,7 +74,11 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 #overlay.show{display:block;}
 .drawerTitle{font-family:"Anton";font-size:.9rem;margin:14px 0 10px;}
 .drawerTitle:first-child{margin-top:0;}
-.btnInvitar{width:100%;padding:10px 0;border:none;border-radius:4px;background:rgba(47,143,255,.15);color:var(--ember);font-family:"Rajdhani";font-weight:700;font-size:.83rem;cursor:pointer;}
+.btnInvitar{width:100%;padding:10px 0;border:none;border-radius:4px;background:rgba(47,143,255,.15);color:var(--ember);font-family:"Rajdhani";font-weight:700;font-size:.83rem;cursor:pointer;margin-bottom:10px;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:70;align-items:center;justify-content:center;padding:20px;}
+.modal.show{display:flex;}
+.modalBox{background:var(--panel2);border:1px solid rgba(47,143,255,.3);border-radius:8px;padding:22px;width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.modalBox h3{font-size:1rem;}
 .solRow{display:flex;align-items:center;gap:10px;padding:8px 2px;}
 .solInfo{flex:1;min-width:0;}
 .solNombre{font-size:.85rem;font-weight:600;}
@@ -178,7 +182,7 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
     <a class="back" href="index.html">←</a>
     <div class="hlogo">⚡</div>
     <div class="hinfo" id="abrirMiembros">
-      <div class="hname">CLAN VX VORTEX⁶⁶⁶ <span id="miCorona" style="display:none;">👑</span></div>
+      <div class="hname">CLAN VX VORTEX⁶⁶⁶ <span id="miCorona" style="display:none;">👑 Administrador</span></div>
       <div class="hsub">
         <span id="estadoNormal" style="display:flex;align-items:center;gap:5px;">
           <span class="dot"></span><span id="numActivos">0 activos</span> · <span id="numTotal">0 miembros</span>
@@ -224,6 +228,7 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 <!-- MIEMBROS / SOLICITUDES -->
 <div id="overlay"></div>
 <div id="drawer">
+  <button class="btnInvitar" id="btnEditarPerfil">✏️ Editar mi nombre y foto</button>
   <button class="btnInvitar" id="btnInvitar">🔗 Compartir invitación al chat</button>
 
   <div id="seccionSolicitudes" style="display:none;">
@@ -233,6 +238,16 @@ header{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var
 
   <div class="drawerTitle">Miembros del clan</div>
   <div id="listaMiembros"></div>
+</div>
+
+<!-- EDITAR PERFIL -->
+<div class="modal" id="modalPerfil">
+  <div class="modalBox">
+    <h3>Editar mi perfil</h3>
+    <label class="upload-box" id="uploadBoxPerfil">📷<input type="file" id="fotoPerfilInput" accept="image/*"></label>
+    <input class="finput" id="nombrePerfilInput" placeholder="Tu nombre" maxlength="24">
+    <button class="btn-primary" id="btnGuardarPerfil">GUARDAR CAMBIOS</button>
+  </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -405,6 +420,36 @@ function iniciarLectura(){
   window.addEventListener('focus', marcarLectura);
 }
 
+/* -------- editar perfil -------- */
+let fotoPerfilTemp = null;
+document.getElementById('btnEditarPerfil').onclick = ()=>{
+  document.getElementById('nombrePerfilInput').value = miNombre;
+  document.getElementById('uploadBoxPerfil').innerHTML = miFoto ? `<img src="${miFoto}">` : '📷';
+  fotoPerfilTemp = null;
+  document.getElementById('modalPerfil').classList.add('show');
+};
+document.getElementById('uploadBoxPerfil').onclick = ()=> document.getElementById('fotoPerfilInput').click();
+document.getElementById('fotoPerfilInput').onchange = async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  fotoPerfilTemp = await comprimir(file, 80, 300);
+  document.getElementById('uploadBoxPerfil').innerHTML = `<img src="${fotoPerfilTemp}">`;
+};
+document.getElementById('btnGuardarPerfil').onclick = async ()=>{
+  const nuevoNombre = document.getElementById('nombrePerfilInput').value.trim();
+  if(!nuevoNombre){ alert('Escribe un nombre.'); return; }
+  miNombre = nuevoNombre;
+  if(fotoPerfilTemp) miFoto = fotoPerfilTemp;
+  localStorage.setItem('vxChatNombre', miNombre);
+  if(miFoto) localStorage.setItem('vxChatFoto', miFoto);
+  await db.collection('chatUsuarios').doc(miUid).set({
+    nombre: miNombre, foto: miFoto || null
+  }, {merge:true});
+  document.getElementById('modalPerfil').classList.remove('show');
+};
+document.getElementById('modalPerfil').addEventListener('click', e=>{
+  if(e.target.id === 'modalPerfil') document.getElementById('modalPerfil').classList.remove('show');
+});
+
 /* -------- invitar por enlace -------- */
 document.getElementById('btnInvitar').onclick = ()=>{
   const url = location.href.split('?')[0];
@@ -486,7 +531,7 @@ function pintarMiembros(){
     const row = document.createElement('div');
     row.className = 'memberRow';
     const inicial = (m.nombre||'?').charAt(0).toUpperCase();
-    const corona = m.isAdmin ? ' 👑' : '';
+    const corona = m.isAdmin ? ' 👑 Admin' : '';
     const btnKick = (soyAdmin && uid !== miUid) ? `<button class="btnKick">Eliminar</button>` : '';
     row.innerHTML = `
       <div class="memberAvatar">${m.foto?`<img src="${m.foto}">`:inicial}<div class="statusDot ${enLinea?'on':''}"></div></div>
